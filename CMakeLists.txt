@@ -15,9 +15,13 @@ set(ENGINE_RESOURCES
 add_subdirectory(vendors)
 
 find_package(GLM REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(SDL2 REQUIRED)
+find_package(GLEW REQUIRED)
+
 add_library(engine ${ENGINE_RESOURCES})
-target_link_libraries(engine json)
-target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS})
+target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
 ########
 # Viewer 

@@ -1,4 +1,5 @@
-#include <engine/scenenode.hpp>
+#include <engine/mesh.h>
+#include <engine/scenenode.h>
 
 class SceneVisual : public SceneNode {
     std::vector<Mesh> meshes;
@@ -6,5 +7,6 @@ class SceneVisual : public SceneNode {
   public:
     SceneVisual() { this->_typeOfNode = SceneNodeType::VISUAL; }
     virtual json this_json() const { return json("VISUAL"); }
-    std::vector<Mesh> &getMeshes() const { return this->meshes; }
+    std::vector<Mesh> &getMeshes() { return this->meshes; }
+    void appendMesh(const Mesh &mesh) { this->meshes.push_back(mesh); }
 };
