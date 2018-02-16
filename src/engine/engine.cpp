@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <stack>
 #include <utils/logger.h>
-#include <utils/str.h>
 
 bool Engine::createWindows(float width, float heigth) {
 
