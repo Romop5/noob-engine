@@ -1,4 +1,5 @@
 #include "scenenode.h"
+#include "sceneprogram.h"
 #include "scenetransform.h"
 #include "scenevisual.h"
 #include <SDL2/SDL.h>

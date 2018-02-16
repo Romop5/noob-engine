@@ -1,3 +1,5 @@
+#ifndef _LOGGER_H
+#define _LOGGER_H
 #include <cstdarg>
 #include <cstdio>
 
@@ -31,3 +33,4 @@ class Logger {
         va_end(args);
     }
 };
+#endif
