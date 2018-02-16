@@ -17,7 +17,6 @@ int main() {
     node->setTransformation(glm::lookAt(
         glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0)));
 
-    LOG_INFO("Json of tree: %s\n", tree->to_json().dump(1).c_str());
 
     /*
      * Create model
@@ -34,7 +33,16 @@ int main() {
                                                   glm::vec3(0.0f, 1.0f, 0.0f)}};
     mesh.createFromVertices(triangle);
     model->appendMesh(mesh);
-    nodeB->addChild(model);
+
+    auto shaderProgram = std::make_shared<ShaderProgram>();
+    shaderProgram->LoadShaders("basic.vertex","basic.fragment");
+    auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
+
+    shaderNode->addChild(model);
+    nodeB->addChild(shaderNode);
+
+
+    LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
     while (engine.isRunning()) {
         engine.handleEvents();

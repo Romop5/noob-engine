@@ -5,7 +5,9 @@
 #include <sstream>
 #include <string>
 #include <utils/logger.h>
+#include <utils/str.h>
 #include <vector>
+#include <cstdio>
 
 class ShaderProgram {
 
@@ -23,21 +25,27 @@ class ShaderProgram {
 
     GLuint CompileShader(const std::string file) {
         GLenum shaderType = getTypeOfShaderFromName(file);
+        LOG_INFO("For shader %s got type: %d\n", file.c_str(),shaderType);
         GLuint shader = glCreateShader(shaderType);
 
-        std::ifstream inputFile(file, std::ios::in);
-        if (!inputFile.is_open()) {
+        FILE* inputFile = fopen(file.c_str(), "r");
+        if (inputFile == NULL) {
             LOG_ERROR("Failed to open shader %s\n", file.c_str());
             return 0;
         }
-        // Read file
-        std::stringstream str;
-        str << inputFile.rdbuf();
-        // Compile buffer
-        const char *inputShade = str.str().c_str();
+        fseek(inputFile,0, SEEK_END); 
+        long lengthOfInputText = ftell(inputFile);
+        rewind(inputFile);
 
-        glShaderSource(shader, 1, &inputShade, NULL);
+        char* source = new char[lengthOfInputText+1];
+        source[lengthOfInputText] = 0;
+        fread(source, 1, lengthOfInputText, inputFile);
+        
+        LOG_INFO("Shader content: '%s'\n", source);
+        glShaderSource(shader, 1, &source, NULL);
         glCompileShader(shader);
+
+        delete[] source;
 
         GLint Result = GL_FALSE;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &Result);
@@ -74,9 +82,15 @@ class ShaderProgram {
         glLinkProgram(shaderProgram);
 
         GLint Result = GL_FALSE;
-        glGetShaderiv(shaderProgram, GL_COMPILE_STATUS, &Result);
-        if (Result == GL_FALSE) {
-            LOG_ERROR("Failed to link shaders\n");
+        glGetProgramiv(shaderProgram, GL_COMPILE_STATUS, &Result);
+
+        int InfoLogLength = 0;
+        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
+        if (InfoLogLength > 0) {
+            std::vector<char> errorMessage(InfoLogLength + 1);
+            glGetProgramInfoLog(shaderProgram, InfoLogLength, NULL, &errorMessage[0]);
+            LOG_ERROR("Linking: %s\n", &errorMessage[0]);
+
             return false;
         }
 
@@ -87,14 +101,20 @@ class ShaderProgram {
         return true;
     }
 
-    GLuint getProgram() const { return shaderProgram; }
+    GLuint getProgramId() const { return shaderProgram; }
 };
 
 class SceneShader : public SceneNode {
+    std::shared_ptr<ShaderProgram> _program;
+    public:
     SceneShader() { _typeOfNode = SceneNodeType::SHADER; }
-    std::shared_ptr<ShaderProgram> program;
-    GLuint getProgram() const { return program->getProgram(); }
+    SceneShader(std::shared_ptr<ShaderProgram> sp) {
+         _typeOfNode = SceneNodeType::SHADER; 
+        _program = sp;
+        
+    }
+    GLuint getProgram() const { return _program->getProgramId(); }
     void setProgram(std::shared_ptr<ShaderProgram> program) {
-        this->program = program;
+        this->_program = program;
     }
 };
