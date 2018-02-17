@@ -1,18 +1,22 @@
+#ifndef _MESH_H
+#define _MESH_H
+
 #define GL3_PROTOTYPES 1
 #include <GL/glew.h>
 
-struct Vertex {
+struct Triangle{
     glm::vec3 a, b, c;
 };
 
 class Mesh {
     GLuint vao;
     GLuint vbo;
+    size_t  verticesCount;
 
   public:
     Mesh() { glGenVertexArrays(1, &vao); }
     ~Mesh() { glDeleteVertexArrays(1, &vao); }
-    void createFromVertices(std::vector<Vertex> vertices) {
+    void createFromVertices(std::vector<Triangle> vertices) {
         size_t size = sizeof(float) * 9 * vertices.size();
         auto rawArray = new float[size];
         for (size_t i = 0; i < vertices.size(); i++) {
@@ -36,7 +40,11 @@ class Mesh {
 
         glBufferData(GL_ARRAY_BUFFER, size, rawArray, GL_STATIC_DRAW);
         delete[] rawArray;
+
+        this->verticesCount = vertices.size()*3;
     }
     GLuint getVertexBufferObjectId() const { return this->vbo; }
     GLuint getVertexArrayObjectId() const { return this->vao; }
+    size_t getVerticesCount() const { return this->verticesCount; }
 };
+#endif

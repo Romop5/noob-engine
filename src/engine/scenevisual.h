@@ -16,8 +16,8 @@ class SceneVisual : public SceneNode {
     {
         for(auto &mesh: this->meshes)
         {
-            LOG_INFO("Drawing a mesh with transform:\n");
-            LOG_INFO("%s\n", glm::to_string(state.mvp).c_str());
+            //LOG_INFO("Drawing a mesh with transform:\n");
+            //LOG_INFO("%s\n", glm::to_string(state.mvp).c_str());
             GLint loc = glGetUniformLocation(state.program, "mvp");
             glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.mvp));
             glEnableVertexAttribArray(0);
@@ -34,7 +34,7 @@ class SceneVisual : public SceneNode {
             // Draw the triangle !
             glDrawArrays(
                 GL_TRIANGLES, 0,
-                3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+                mesh.getVerticesCount()); // Starting from vertex 0; 3 vertices total -> 1 triangle
             glDisableVertexAttribArray(0);  
         }
 

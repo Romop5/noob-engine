@@ -15,13 +15,13 @@ class Engine {
     bool _isRunning;
 
   public:
-    Engine() : _isRunning(true), _window(NULL) {}
+    Engine() : _isRunning(true), _window(NULL), _scene(nullptr) {}
     ~Engine();
     bool createWindows(float width, float heigth);
     void resizeWindows(float width, float heigth);
     void setWindowsVisible(bool status);
     void setScene(const std::shared_ptr<SceneNode> &scene);
-    const std::shared_ptr<SceneNode> &getScene();
+    std::shared_ptr<SceneNode> getScene() { return _scene; }
     void render();
     void handleEvents();
     bool isRunning() const { return this->_isRunning; }

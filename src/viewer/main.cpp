@@ -3,6 +3,12 @@
 #include <iostream>
 #include <utils/logger.h>
 
+#include <thread>
+#include <chrono>
+#include <ratio>
+
+#include <viewer/primitives.h>
+
 int main() {
 
     size_t width = 800;
@@ -15,6 +21,7 @@ int main() {
 
     auto nodeB = std::make_shared<SceneTransform>();
     node->addChild(nodeB);
+
 
     nodeB->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,10.0)));
 
@@ -36,12 +43,29 @@ int main() {
     engine.createWindows(800, 600);
 
     auto model = std::make_shared<SceneVisual>();
-    Mesh mesh;
-
-    static const std::vector<Vertex> triangle = {{glm::vec3(-1.0f, -1.0f, 0.0f),
+    Primitive mesh;
+    mesh.createBox();
+/*
+    static const std::vector<Triangle> triangle = {
+                                                 {glm::vec3(-1.0f, -1.0f, 0.0f),
                                                   glm::vec3(1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(0.0f, 1.0f, 0.0f)}};
+                                                  glm::vec3(1.0f, 1.0f, 0.0f)},
+
+                                                 {glm::vec3(-1.0f, -1.0f, 0.0f),
+                                                  glm::vec3(-1.0f, 1.0f, 0.0f),
+                                                  glm::vec3(1.0f, 1.0f, 0.0f)},
+
+                                                  {glm::vec3(-1.0f, 1.0f, 2.0f),
+                                                  glm::vec3(-1.0f, -1.0f, 0.0f),
+                                                  glm::vec3(-1.0f, 1.0f, 0.0f)},
+
+                                                  {glm::vec3(-1.0f, 1.0f, 2.0f),
+                                                  glm::vec3(-1.0f, -1.0f, 0.0f),
+                                                  glm::vec3(-1.0f, -1.0f, 2.0f)},
+
+    };
     mesh.createFromVertices(triangle);
+    */
     model->appendMesh(mesh);
 
     auto shaderProgram = std::make_shared<ShaderProgram>();
@@ -50,24 +74,40 @@ int main() {
 
 
 
-    auto duplicTransf = std::make_shared<SceneTransform>();
-   duplicTransf->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,1.0)));
-    duplicTransf->addChild(model);
+    //auto duplicTransf = std::make_shared<SceneTransform>();
+  // duplicTransf->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,1.0)));
+  //  duplicTransf->addChild(model);
     shaderNode->addChild(model);
-    shaderNode->addChild(duplicTransf);
+ //   shaderNode->addChild(duplicTransf);
     nodeB->addChild(shaderNode);
 
 
-    LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
+    if(engine.getScene() != nullptr)
+        LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
 
     size_t i = 0;
+
+    // Show wireframed
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    size_t desiredFrameRate = 30;
+    std::chrono::duration<double, std::milli> milisecondsPerPass {1000.0/desiredFrameRate};
     while (engine.isRunning()) {
+        auto passStart = std::chrono::high_resolution_clock::now();
+
         engine.handleEvents();
+        // Render
         engine.render();
 
+        // Do rotation
         i++;
-       glm::mat4 rot = glm::rotate(float(i)*0.001f, glm::vec3(0.0,1.0,0.0));
+        glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
         nodeB->setTransformation(rot);
+
+        // calculate remaining time
+        auto passEnd = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = passEnd-passStart;
+        std::this_thread::sleep_for(milisecondsPerPass-elapsed);
     }
 }
