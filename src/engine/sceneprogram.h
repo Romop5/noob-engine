@@ -39,6 +39,7 @@ class ShaderProgram {
         char* source = new char[lengthOfInputText+1];
         source[lengthOfInputText] = 0;
         fread(source, 1, lengthOfInputText, inputFile);
+        fclose(inputFile);
         
         glShaderSource(shader, 1, &source, NULL);
         glCompileShader(shader);

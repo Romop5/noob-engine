@@ -15,7 +15,7 @@ class Engine {
     bool _isRunning;
 
   public:
-    Engine() : _isRunning(true) {}
+    Engine() : _isRunning(true), _window(NULL) {}
     ~Engine();
     bool createWindows(float width, float heigth);
     void resizeWindows(float width, float heigth);
