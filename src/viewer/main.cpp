@@ -48,7 +48,13 @@ int main() {
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
     auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
 
+
+
+    auto duplicTransf = std::make_shared<SceneTransform>();
+   duplicTransf->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,1.0)));
+    duplicTransf->addChild(model);
     shaderNode->addChild(model);
+    shaderNode->addChild(duplicTransf);
     nodeB->addChild(shaderNode);
 
 
