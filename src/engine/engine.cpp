@@ -62,5 +62,13 @@ void Engine::handleEvents() {
             this->_isRunning = false;
         } break;
         }
+        if(this->_messageCallback != nullptr)
+            this->_messageCallback(event);
     }
+}
+
+void Engine::setMessageCallback(std::function<void(SDL_Event)> callback)
+{
+    assert(callback != nullptr);
+    this->_messageCallback = callback;
 }

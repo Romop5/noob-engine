@@ -113,6 +113,8 @@ class SceneShader : public SceneNode {
         _program = sp;
         
     }
+    virtual json this_json() const { return json("SceneShader"); }
+
     GLuint getProgram() const { return _program->getProgramId(); }
     void setProgram(std::shared_ptr<ShaderProgram> program) {
         this->_program = program;

@@ -8,6 +8,8 @@
 #include <ratio>
 
 #include <viewer/primitives.h>
+#include <viewer/cameracontroller.h>
+
 
 int main() {
 
@@ -16,11 +18,11 @@ int main() {
     LOG_INFO("Starting viewer\n");
     auto tree = std::make_shared<SceneNode>();
 
-    auto node = std::make_shared<SceneTransform>();
-    tree->addChild(node);
+    auto cameraNode = std::make_shared<SceneCamera>();
+    tree->addChild(cameraNode);
 
     auto nodeB = std::make_shared<SceneTransform>();
-    node->addChild(nodeB);
+    cameraNode->addChild(nodeB);
 
 
     nodeB->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,10.0)));
@@ -30,9 +32,8 @@ int main() {
     glm::mat4 viewMatrix = glm::lookAt(
         glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
 
-    glm::mat4 camera = projection*viewMatrix;
-    //glm::mat4 camera = viewMatrix;
-    node->setTransformation(camera);
+    cameraNode->setWorldTransform(viewMatrix);
+    cameraNode->setPerspectiveTransform(projection);
 
 
     /*
@@ -45,28 +46,20 @@ int main() {
     auto model = std::make_shared<SceneVisual>();
     Primitive mesh;
     mesh.createBox();
-/*
-    static const std::vector<Triangle> triangle = {
-                                                 {glm::vec3(-1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(1.0f, 1.0f, 0.0f)},
-
-                                                 {glm::vec3(-1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(-1.0f, 1.0f, 0.0f),
-                                                  glm::vec3(1.0f, 1.0f, 0.0f)},
-
-                                                  {glm::vec3(-1.0f, 1.0f, 2.0f),
-                                                  glm::vec3(-1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(-1.0f, 1.0f, 0.0f)},
-
-                                                  {glm::vec3(-1.0f, 1.0f, 2.0f),
-                                                  glm::vec3(-1.0f, -1.0f, 0.0f),
-                                                  glm::vec3(-1.0f, -1.0f, 2.0f)},
-
-    };
-    mesh.createFromVertices(triangle);
-    */
     model->appendMesh(mesh);
+
+
+    Primitive submesh;
+    submesh.createBox();
+    auto submodel = std::make_shared<SceneVisual>();
+    submodel->appendMesh(mesh);
+
+    auto submeshTransfor = std::make_shared<SceneTransform>();
+    submeshTransfor->setTransformation(
+            glm::translate(glm::scale(glm::mat4(),glm::vec3(2.0,2.0,2.0)), glm::vec3(0,3.0,0)));
+
+    submeshTransfor->addChild(submodel);
+    model->addChild(submeshTransfor);
 
     auto shaderProgram = std::make_shared<ShaderProgram>();
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
@@ -89,10 +82,18 @@ int main() {
     size_t i = 0;
 
     // Show wireframed
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
 
     size_t desiredFrameRate = 30;
     std::chrono::duration<double, std::milli> milisecondsPerPass {1000.0/desiredFrameRate};
+
+    auto cameraController = std::make_shared<CameraController>(cameraNode);
+    /*  REGISTER CALLBACK*/
+    engine.setMessageCallback(
+        [&cameraController](SDL_Event event) { cameraController->processMessage(event); }
+    );
+    /*  RENDERING LOOP */
     while (engine.isRunning()) {
         auto passStart = std::chrono::high_resolution_clock::now();
 
