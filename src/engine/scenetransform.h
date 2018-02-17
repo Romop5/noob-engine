@@ -18,5 +18,22 @@ class SceneTransform : public SceneNode {
     void setTransformation(glm::mat4 newTrans) {
         this->_finalTransformation = newTrans;
     }
+
+    
+    virtual void render(RenderState& state)
+    {
+        // Pre
+        glm::mat4 oldTransform = state.mvp;
+        state.mvp = state.mvp * this->getTransformation();
+        for(auto &child: this->getChildren())
+        {
+            child->render(state);
+        } 
+        // Revert
+        state.mvp = oldTransform;
+    }
+
+
+
 };
 #endif

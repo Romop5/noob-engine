@@ -40,7 +40,6 @@ class ShaderProgram {
         source[lengthOfInputText] = 0;
         fread(source, 1, lengthOfInputText, inputFile);
         
-        LOG_INFO("Shader content: '%s'\n", source);
         glShaderSource(shader, 1, &source, NULL);
         glCompileShader(shader);
 
@@ -54,6 +53,7 @@ class ShaderProgram {
             std::vector<char> errorMessage(InfoLogLength + 1);
             glGetShaderInfoLog(shader, InfoLogLength, NULL, &errorMessage[0]);
             LOG_ERROR("%s\n", &errorMessage[0]);
+            LOG_ERROR("In shader: %s\n", file.c_str());
 
             return 0;
         }
@@ -116,4 +116,21 @@ class SceneShader : public SceneNode {
     void setProgram(std::shared_ptr<ShaderProgram> program) {
         this->_program = program;
     }
+
+    virtual void render(RenderState& state) override
+    {
+        GLuint oldProgram = state.program;
+        state.program = this->getProgram(); 
+        glUseProgram(state.program);
+        // Pre
+        for(auto &child: this->getChildren())
+        {
+            child->render(state);
+        } 
+        // Revert
+        state.program = this->getProgram();
+        glUseProgram(state.program);
+    }
+
+        
 };

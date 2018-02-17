@@ -14,8 +14,13 @@ int main() {
     auto nodeB = std::make_shared<SceneTransform>();
     node->addChild(nodeB);
 
-    node->setTransformation(glm::lookAt(
-        glm::vec3(1.0, 0.0, 0.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0)));
+    glm::mat4 perspective = glm::perspectiveFov(
+                            40.0, 800.0,600.0,0.0,100.0);
+    glm::mat4 viewMatrix = glm::lookAt(
+        glm::vec3(0, 0.0, -10.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+
+    glm::mat4 camera = viewMatrix*perspective;
+    node->setTransformation(camera);
 
 
     /*

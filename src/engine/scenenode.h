@@ -1,6 +1,7 @@
 #ifndef _SCENENODE_H
 #define _SCENENODE_H
-#include "treetemplate.h"
+#include <engine/treetemplate.h>
+#include <engine/renderstate.h>
 #include <json.hpp>
 #include <memory>
 
@@ -28,5 +29,16 @@ class SceneNode : public TreeNode<std::shared_ptr<SceneNode>> {
             return this->this_json();
         }
     }
+
+    virtual void render(RenderState& state)
+    {
+        // Pre
+        for(auto &child: this->getChildren())
+        {
+            child->render(state);
+        } 
+        // Revert
+    }
+        
 };
 #endif
