@@ -5,6 +5,8 @@
 
 int main() {
 
+    size_t width = 800;
+    size_t height = 600;
     LOG_INFO("Starting viewer\n");
     auto tree = std::make_shared<SceneNode>();
 
@@ -14,12 +16,15 @@ int main() {
     auto nodeB = std::make_shared<SceneTransform>();
     node->addChild(nodeB);
 
-    glm::mat4 perspective = glm::perspectiveFov(
-                            40.0, 800.0,600.0,0.0,100.0);
-    glm::mat4 viewMatrix = glm::lookAt(
-        glm::vec3(0, 0.0, -10.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+    nodeB->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,10.0)));
 
-    glm::mat4 camera = viewMatrix*perspective;
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
+  
+    glm::mat4 viewMatrix = glm::lookAt(
+        glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
+
+    glm::mat4 camera = projection*viewMatrix;
+    //glm::mat4 camera = viewMatrix;
     node->setTransformation(camera);
 
 
@@ -49,8 +54,14 @@ int main() {
 
     LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
+
+    size_t i = 0;
     while (engine.isRunning()) {
         engine.handleEvents();
         engine.render();
+
+        i++;
+       glm::mat4 rot = glm::rotate(float(i)*0.001f, glm::vec3(0.0,1.0,0.0));
+        nodeB->setTransformation(rot);
     }
 }

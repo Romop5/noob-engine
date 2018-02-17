@@ -24,7 +24,7 @@ class SceneTransform : public SceneNode {
     {
         // Pre
         glm::mat4 oldTransform = state.mvp;
-        state.mvp = state.mvp * this->getTransformation();
+        state.mvp =  state.mvp*this->getTransformation();
         for(auto &child: this->getChildren())
         {
             child->render(state);
