@@ -8,75 +8,80 @@ class Primitive: public Mesh
             std::vector<Triangle> triangles;
             // front 
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, 1.0f),
-                 glm::vec3(1.0f, -1.0f, 1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                Vertex(glm::vec3(-1.0f, -1.0f, 1.0f),glm::vec3(1.0,0.0,0.0)),
+                 Vertex(glm::vec3(1.0f, -1.0f, 1.0f),glm::vec3(1.0,1.0,0.0)),
+                 Vertex(glm::vec3(1.0f, 1.0f, 1.0f),glm::vec3(1.0,1.0,1.0))
+
             });
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, 1.0f),
-                 glm::vec3(-1.0f, 1.0f, 1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, 1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, 1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, 1.0f))
             });
              //back 
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, -1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, -1.0f))
             });
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, -1.0f),
-                 glm::vec3(-1.0f, 1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, -1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, -1.0f))
             });
 
              // left
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, -1.0f),
-                 glm::vec3(-1.0f, 1.0f, -1.0f),
-                 glm::vec3(-1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, 1.0f))
             });
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, -1.0f),
-                 glm::vec3(-1.0f, -1.0f, 1.0f),
-                 glm::vec3(-1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, -1.0f, 1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, 1.0f))
             });
 
             //right 
             triangles.push_back( {
-                 glm::vec3(1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, 1.0f))
             });
             triangles.push_back( {
-                 glm::vec3(1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, -1.0f, 1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, -1.0f, 1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, 1.0f))
             });
-            // bottom
+            //bottom 
             triangles.push_back( {
-                 glm::vec3(1.0f, -1.0f, 1.0f),
-                 glm::vec3(1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, -1.0f, 1.0f)
+                 Vertex(glm::vec3(1.0f, -1.0f, 1.0f)),
+                 Vertex(glm::vec3(1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f,-1.0f, 1.0f))
             });
+
             triangles.push_back( {
-                 glm::vec3(-1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, -1.0f, -1.0f),
-                 glm::vec3(1.0f, -1.0f, 1.0f)
+                 Vertex(glm::vec3(-1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, -1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, -1.0f, 1.0f))
             });
             // up 
             triangles.push_back( {
-                 glm::vec3(1.0f, 1.0f, 1.0f),
-                 glm::vec3(1.0f, 1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(1.0f, 1.0f, 1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, 1.0f))
             });
+
             triangles.push_back( {
-                 glm::vec3(-1.0f, 1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, -1.0f),
-                 glm::vec3(1.0f, 1.0f, 1.0f)
+                 Vertex(glm::vec3(-1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(1.0f, 1.0f, -1.0f)),
+                 Vertex(glm::vec3(-1.0f, 1.0f, 1.0f))
             });
 
 
 
-            this->createFromVertices(triangles);
+            this->createFromVertices(triangles,
+                VertexAtributes::POSITION | VertexAtributes::COLOR);
+                //VertexAtributes::POSITION );
          }
 };

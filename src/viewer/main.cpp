@@ -84,6 +84,7 @@ int main() {
     // Show wireframed
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     size_t desiredFrameRate = 30;
     std::chrono::duration<double, std::milli> milisecondsPerPass {1000.0/desiredFrameRate};

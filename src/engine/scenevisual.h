@@ -20,22 +20,15 @@ class SceneVisual : public SceneNode {
             //LOG_INFO("%s\n", glm::to_string(state.mvp).c_str());
             GLint loc = glGetUniformLocation(state.program, "mvp");
             glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.mvp));
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, mesh.getVertexBufferObjectId());
+          //  glBindBuffer(GL_ARRAY_BUFFER, mesh.getVertexBufferObjectId());
+                       // Draw the triangle !
 
-            glVertexAttribPointer(0, // attribute 0. No particular reason for 0,
-                                     // but must match the layout in the shader.
-                                  3, // size
-                                  GL_FLOAT, // type
-                                  GL_FALSE, // normalized?
-                                  0,        // stride
-                                  (void *)0 // array buffer offset
-            );
-            // Draw the triangle !
-            glDrawArrays(
-                GL_TRIANGLES, 0,
-                mesh.getVerticesCount()); // Starting from vertex 0; 3 vertices total -> 1 triangle
-            glDisableVertexAttribArray(0);  
+            glBindVertexArray(mesh.getVertexArrayObjectId());
+
+            glDrawArrays(GL_TRIANGLES,0, mesh.getVerticesCount());
+
+            glBindVertexArray(0);
+            //glDisableVertexAttribArray(0);  
         }
 
         // Pre
