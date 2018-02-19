@@ -1,0 +1,60 @@
+// Pyramide 
+// Roman Dobias
+
+using vec3 = struct
+{
+    float x;
+    float y;
+    float z;
+};
+
+vec3 cVec3(float x, float y, float z)
+{
+    vec3 tmp;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.z = z;
+    return tmp;
+}
+
+using cube = struct
+{
+    vec3 position;
+    float sz;
+};
+
+cube cCube(vec3 pos, float sz)
+{
+    cube tmp;
+    tmp.position = pos;
+    tmp.sz = sz;
+    return tmp;
+}
+
+int doIt(cube this)
+{
+    float newSize = this.sz/2.0;
+    float cubeSize= this.sz/2.0;
+    appendSymbol(cCube(cVec3(this.position.x-newSize,this.position.y-newSize,this.position.z-newSize) ,cubeSize));
+
+    appendSymbol(cCube(cVec3(this.position.x+newSize,this.position.y-newSize,this.position.z-newSize) ,cubeSize));
+
+    appendSymbol(cCube(cVec3(this.position.x,this.position.y-newSize,this.position.z+newSize) ,cubeSize));
+
+    appendSymbol(cCube(cVec3(this.position.x,this.position.y+newSize,this.position.z) ,cubeSize));
+
+}
+
+using tst = rule cube
+{
+    return true;
+} {
+    doIt(this);
+};
+
+
+int init()
+{
+    appendSymbol(cCube(cVec3(0.0,0.0,0.0),50.0));
+}
+
