@@ -28,7 +28,7 @@ int main() {
 
     nodeB->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,10.0)));
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
   
     glm::mat4 viewMatrix = glm::lookAt(
         glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
