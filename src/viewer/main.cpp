@@ -45,13 +45,13 @@ int main() {
     engine.createWindows(800, 600);
 
     auto model = std::make_shared<SceneVisual>();
-    Primitive mesh;
-    mesh.createBox();
+    auto mesh = std::make_shared<Primitive>();
+    mesh->createBox();
     model->appendMesh(mesh);
 
 
-    Primitive submesh;
-    submesh.createBox();
+    auto submesh = std::make_shared<Primitive>();
+    submesh->createBox();
     auto submodel = std::make_shared<SceneVisual>();
     submodel->appendMesh(mesh);
 
@@ -66,12 +66,10 @@ int main() {
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
     auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
 
-    shaderNode->addChild(model);
+  //  shaderNode->addChild(model);
     nodeB->addChild(shaderNode);
 
 
-    if(engine.getScene() != nullptr)
-        LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
 
     size_t i = 0;
@@ -104,6 +102,8 @@ int main() {
     }
 
 
+    if(engine.getScene() != nullptr)
+        LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
     /*  RENDERING LOOP */
     while (engine.isRunning()) {

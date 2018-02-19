@@ -1,3 +1,5 @@
+#ifndef _PRIMITIVE_H
+#define _PRIMITIVE_H
 #include <engine/mesh.h>
 
 class Primitive: public Mesh
@@ -85,3 +87,4 @@ class Primitive: public Mesh
                 //VertexAtributes::POSITION );
          }
 };
+#endif

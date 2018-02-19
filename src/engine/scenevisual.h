@@ -5,15 +5,16 @@
 #include <engine/scenenode.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/ext.hpp>
+#include <memory>
 
 class SceneVisual : public SceneNode {
-    std::vector<Mesh> meshes;
+    std::vector<std::shared_ptr<Mesh>> meshes;
 
   public:
     SceneVisual() { this->_typeOfNode = SceneNodeType::VISUAL; }
     virtual json this_json() const { return json("VISUAL"); }
-    std::vector<Mesh> &getMeshes() { return this->meshes; }
-    void appendMesh(const Mesh &mesh) { this->meshes.push_back(mesh); }
+    std::vector<std::shared_ptr<Mesh>> &getMeshes() { return this->meshes; }
+    void appendMesh(const std::shared_ptr<Mesh> &mesh) { this->meshes.push_back(mesh); }
 
     virtual void render(RenderState& state)
     {
@@ -26,9 +27,9 @@ class SceneVisual : public SceneNode {
           //  glBindBuffer(GL_ARRAY_BUFFER, mesh.getVertexBufferObjectId());
                        // Draw the triangle !
 
-            glBindVertexArray(mesh.getVertexArrayObjectId());
+            glBindVertexArray(mesh->getVertexArrayObjectId());
 
-            glDrawArrays(GL_TRIANGLES,0, mesh.getVerticesCount());
+            glDrawArrays(GL_TRIANGLES,0, mesh->getVerticesCount());
 
             glBindVertexArray(0);
             //glDisableVertexAttribArray(0);  
