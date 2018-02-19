@@ -1,3 +1,6 @@
+#ifndef _ENGINE_H
+#define _ENGINE_H
+
 #include <engine/scenenode.h>
 #include <engine/sceneprogram.h>
 #include <engine/scenecamera.h>
@@ -28,3 +31,4 @@ class Engine {
     bool isRunning() const { return this->_isRunning; }
     void setMessageCallback(std::function<void(SDL_Event)> callback);
 };
+#endif

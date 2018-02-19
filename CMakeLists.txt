@@ -31,7 +31,7 @@ set(VIEWER_RESOURCES
     ./src/viewer/main.cpp
 )
 add_executable(viewer ${VIEWER_RESOURCES})
-target_link_libraries(viewer engine)
+target_link_libraries(viewer engine procgen)
 
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

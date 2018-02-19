@@ -9,6 +9,7 @@ class CameraController
     std::shared_ptr<SceneCamera> _cameraNode; 
     glm::vec3    _position;
     glm::mat4   _rotationMatrix;
+    glm::vec2   _angles;
     bool _isDirty;
 
     void moveCameraBy(glm::vec3 _offset)

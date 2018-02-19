@@ -9,6 +9,7 @@
 
 #include <viewer/primitives.h>
 #include <viewer/cameracontroller.h>
+#include <viewer/generator.h>
 
 
 int main() {
@@ -65,13 +66,7 @@ int main() {
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
     auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
 
-
-
-    //auto duplicTransf = std::make_shared<SceneTransform>();
-  // duplicTransf->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,1.0)));
-  //  duplicTransf->addChild(model);
     shaderNode->addChild(model);
- //   shaderNode->addChild(duplicTransf);
     nodeB->addChild(shaderNode);
 
 
@@ -94,6 +89,22 @@ int main() {
     engine.setMessageCallback(
         [&cameraController](SDL_Event event) { cameraController->processMessage(event); }
     );
+
+
+    /* GENERATION */
+    
+
+    Generator gen;
+    if(gen.compile("test.gen") != false)
+    {
+        if(gen.generate(shaderNode) == false)
+            LOG_ERROR("Generation failed\n");
+    } else {
+        LOG_ERROR("Procedural compilation failed\n");
+    }
+
+
+
     /*  RENDERING LOOP */
     while (engine.isRunning()) {
         auto passStart = std::chrono::high_resolution_clock::now();

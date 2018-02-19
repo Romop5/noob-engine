@@ -1,3 +1,5 @@
+#ifndef _SCENEPROGRAM_H
+#define _SCENEPROGRAM_H
 #include <GL/glew.h>
 #include <engine/scenenode.h>
 #include <fstream>
@@ -137,3 +139,4 @@ class SceneShader : public SceneNode {
 
         
 };
+#endif

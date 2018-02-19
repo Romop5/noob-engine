@@ -1,3 +1,6 @@
+#ifndef _SCENEVISUAL_H
+#define _SCENEVISUAL_H
+
 #include <engine/mesh.h>
 #include <engine/scenenode.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -41,3 +44,4 @@ class SceneVisual : public SceneNode {
         
 
 };
+#endif
