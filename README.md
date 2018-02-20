@@ -3,6 +3,10 @@ A noobish 3D rendering engine made to learn basics of 3D rendering
 
 This engine is also used to integrate [ProcGen library](https://github.com/Romop5/procgen/).
 
+<p align="center">
+    <img src="https://github.com/Romop5/noob-engine/blob/master/pyramide.png?raw=true">
+</p>
+
 # Features
 * Scene graph
 * Phong shading (TODO)
