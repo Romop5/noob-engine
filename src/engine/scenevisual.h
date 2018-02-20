@@ -22,7 +22,7 @@ class SceneVisual : public SceneNode {
         {
             //LOG_INFO("Drawing a mesh with transform:\n");
             //LOG_INFO("%s\n", glm::to_string(state.mvp).c_str());
-            GLint loc = glGetUniformLocation(state.program, "modelview");
+            GLint loc = glGetUniformLocation(state.program, "world");
             glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.mvp));
           //  glBindBuffer(GL_ARRAY_BUFFER, mesh.getVertexBufferObjectId());
                        // Draw the triangle !

@@ -33,7 +33,7 @@ int main() {
     glm::mat4 viewMatrix = glm::lookAt(
         glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
 
-    cameraNode->setWorldTransform(viewMatrix);
+    cameraNode->setViewTransform(viewMatrix);
     cameraNode->setPerspectiveTransform(projection);
 
 

@@ -36,7 +36,7 @@ class CameraController
 
     void calculateTransform()
     {
-         this->_cameraNode->setWorldTransform(
+         this->_cameraNode->setViewTransform(
                     glm::translate(_rotationMatrix, _position));
         this->_isDirty = false;
     }

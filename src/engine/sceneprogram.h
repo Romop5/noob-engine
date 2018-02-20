@@ -133,8 +133,8 @@ class SceneShader : public SceneNode {
         glUseProgram(state.program);
 
         // set perspective
-        GLint loc = glGetUniformLocation(state.program, "projection");
-        glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.projection));
+        GLint loc = glGetUniformLocation(state.program, "projectionview");
+        glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.projectionview));
         // Pre
         for(auto &child: this->getChildren())
         {
