@@ -24,7 +24,7 @@ class Generator
              if(this->pg.runInit() == false)
                     return false;
 
-                this->pg.run(1);
+                this->pg.run(3);
                 json result = this->pg.serialize();
                 produceGeometryFromJson(parent, result);
                 return true; 

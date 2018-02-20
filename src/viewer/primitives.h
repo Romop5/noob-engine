@@ -5,10 +5,9 @@
 class Primitive: public Mesh
 {
     public:
-        void createBox()
+        void createBox(glm::vec3 color = glm::vec3(0.0))
         {
             std::vector<Triangle> triangles;
-            glm::vec3 color = glm::vec3(1.0,0.0,1.0);
             // front 
             triangles.push_back( {
                 Vertex(glm::vec3(-1.0f, -1.0f, 1.0f),glm::vec3(color)),
