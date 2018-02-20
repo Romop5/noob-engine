@@ -9,7 +9,7 @@ bool Engine::createWindows(float width, float heigth) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
         return false;
     this->_window =
-        SDL_CreateWindow("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        SDL_CreateWindow("NoobEngine Pro-Alfa-Noob version 666", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                          width, heigth, SDL_WINDOW_OPENGL);
 
     _mainContext = SDL_GL_CreateContext(this->_window);
