@@ -9,7 +9,7 @@ class SceneCamera : public SceneTransform
     // SceneTransform invalidation flag
     bool _isDirty;
     glm::mat4 _perspective;
-    glm::mat4 _world;
+    glm::mat4 _view;
     public:
     SceneCamera(): _isDirty(true) {}
     virtual json this_json() const { return json("Camera"); }
@@ -19,7 +19,7 @@ class SceneCamera : public SceneTransform
         if(_isDirty)
             calculateNodeTransform();
 
-        state.projection = _perspective;
+        state.projectionview = _perspective*_view;
 
         SceneTransform::render(state);
     }
@@ -28,15 +28,15 @@ class SceneCamera : public SceneTransform
         this->_perspective = transform;
         this->_isDirty = true;
     }
-    void setWorldTransform(glm::mat4 transform)
+    void setViewTransform(glm::mat4 transform)
     {
-        this->_world = transform;
+        this->_view = transform;
         this->_isDirty = true;
     }
 
     void calculateNodeTransform()
     {
-        this->setTransformation(this->_world); 
+        //this->setTransformation(this->_view); 
     }
 
 };
