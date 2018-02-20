@@ -1,0 +1,3 @@
+[submodule "vendors/procgen"]
+	path = vendors/procgen
+	url = https://github.com/Romop5/procgen
