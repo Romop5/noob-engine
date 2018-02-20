@@ -83,7 +83,8 @@ class Primitive: public Mesh
 
 
             this->createFromVertices(triangles,
-                VertexAtributes::POSITION | VertexAtributes::COLOR);
+                VertexAtributes::POSITION | VertexAtributes::COLOR
+                | VertexAtributes::NORMAL);
                 //VertexAtributes::POSITION );
          }
 };

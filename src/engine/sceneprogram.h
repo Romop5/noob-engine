@@ -10,6 +10,9 @@
 #include <vector>
 #include <cstdio>
 
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext.hpp>
+
 class ShaderProgram {
 
   private:
@@ -125,14 +128,20 @@ class SceneShader : public SceneNode {
     virtual void render(RenderState& state) override
     {
         GLuint oldProgram = state.program;
+        state.countOfLights++;
         state.program = this->getProgram(); 
         glUseProgram(state.program);
+
+        // set perspective
+        GLint loc = glGetUniformLocation(state.program, "projection");
+        glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.projection));
         // Pre
         for(auto &child: this->getChildren())
         {
             child->render(state);
         } 
         // Revert
+        state.countOfLights--;
         state.program = this->getProgram();
         glUseProgram(state.program);
     }

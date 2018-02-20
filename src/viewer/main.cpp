@@ -62,11 +62,16 @@ int main() {
     submeshTransfor->addChild(submodel);
     model->addChild(submeshTransfor);
 
+    auto objects = std::make_shared<SceneNode>();
+
     auto shaderProgram = std::make_shared<ShaderProgram>();
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
     auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
 
   //  shaderNode->addChild(model);
+    auto lightNode = std::make_shared<SceneLight>();
+    lightNode->addChild(objects);
+    shaderNode->addChild(lightNode);
     nodeB->addChild(shaderNode);
 
 
@@ -95,7 +100,7 @@ int main() {
     Generator gen;
     if(gen.compile("test.gen") != false)
     {
-        if(gen.generate(shaderNode) == false)
+        if(gen.generate(objects) == false)
             LOG_ERROR("Generation failed\n");
     } else {
         LOG_ERROR("Procedural compilation failed\n");

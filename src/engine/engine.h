@@ -6,6 +6,7 @@
 #include <engine/scenecamera.h>
 #include <engine/scenetransform.h>
 #include <engine/scenevisual.h>
+#include <engine/scenelight.h>
 #include <SDL2/SDL.h>
 
 // OpenGL / glew Headers

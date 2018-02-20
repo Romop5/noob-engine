@@ -1,18 +1,24 @@
 #version 330 core
 
 layout(location = 0) in vec3 modelPos;
-layout(location = 2) in vec3 vColor;
+layout(location = 2) in vec3 modelColor;
+layout(location = 3) in vec3 modelNormal;
 
-uniform mat4 mvp;
+uniform mat4 modelview;
+uniform mat4 projection;
 
-out vec4 result;
-out vec3 vertexcolor;
+out vec3 fragmentColor;
+out vec3 fragmentPosition;
+out vec3 fragmentNormal;
+out vec3 normal;
 
 void main()
 {
-    vec4 start = mvp*vec4(modelPos,1.0);
-    gl_Position = start;
-    result = start;
-    vertexcolor = vColor;
+    normal = modelNormal;
+    mat4 mvp = projection*modelview;
+    gl_Position = mvp*vec4(modelPos,1.0);
+    fragmentPosition = (modelview*vec4(modelPos,1.0)).xyz;
+    fragmentNormal = (modelview*vec4(modelNormal,0.0)).xyz;
+    fragmentColor = modelColor;
 
 }

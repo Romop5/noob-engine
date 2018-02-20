@@ -38,6 +38,15 @@ struct Vertex
 
 struct Triangle{
     Vertex vertices[3];
+    void calculateNormals()
+    {
+        glm::vec3 a = vertices[0]._position-vertices[2]._position;
+        glm::vec3 b = vertices[1]._position-vertices[2]._position;
+        glm::vec3 normal = glm::normalize(glm::cross(a,b));
+        vertices[0]._normal = normal;
+        vertices[1]._normal = normal;
+        vertices[2]._normal = normal;
+    }
 };
 
 class Mesh {
@@ -91,7 +100,10 @@ class Mesh {
         for (size_t i = 0; i < polygons.size(); i++) {
             for(size_t v= 0; v< 3; v++)
             {
-                offset += polygons[i].vertices[v].copyToRawArray(&rawArray[offset],flags);
+                auto polygon = polygons[i];
+                if(flags & VertexAtributes::NORMAL)
+                    polygon.calculateNormals();
+                offset += polygon.vertices[v].copyToRawArray(&rawArray[offset],flags);
             }
         }
 
@@ -114,6 +126,7 @@ class Mesh {
         glBindVertexArray(0);
         this->verticesCount = polygons.size()*3;
     }
+
     GLuint getVertexBufferObjectId() const { return this->vbo; }
     GLuint getVertexArrayObjectId() const { return this->vao; }
     size_t getVerticesCount() const { return this->verticesCount; }

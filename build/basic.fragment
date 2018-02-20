@@ -2,14 +2,29 @@
 
 out vec4 color;
 
-in vec4 result;
-in vec3 vertexcolor;
+in vec3 fragmentColor;
+in vec3 fragmentPosition;
+in vec3 fragmentNormal;
+
+uniform vec3 lights[10];
+uniform int countOfLights;
+
+in vec3 normal;
+
 void main()
 {
-  //  color = vec4(vertexcolor.xy,0.0,1.0);
-    color = vec4(vertexcolor,1);
-    color += vec4(.1,.1,.1,.0);
-    //color = result.xyz;
-    //color = result;
-   // color = clamp(color,vec4(0.0,0.0,0.0,0.0), vec4(1.0,1.0,1.0,1.0));
+    int lightNum = clamp(countOfLights,0,1);
+    float ambientIntensity = 0.2;
+    float overallLightness = 0.5;
+    for(int i = 0; i < lightNum; i++)
+    {
+        vec3 lightToFragmentVector = lights[0]-fragmentPosition;
+        float amount = dot(normalize(lightToFragmentVector), normalize(fragmentNormal));
+        overallLightness += abs(amount);
+    }
+
+    
+    vec3 realColor = fragmentColor+ambientIntensity+(overallLightness)*0.5;
+    color = vec4(vec3(1.0)-realColor,1.0);
+   // color = vec4(abs(normalize(fragmentNormal)),1.0);
 }

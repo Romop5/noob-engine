@@ -1,6 +1,8 @@
 #ifndef _SCENECAMERA_H
 #define _SCENECAMERA_H
 #include <engine/scenetransform.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext.hpp>
 
 class SceneCamera : public SceneTransform 
 {
@@ -17,6 +19,8 @@ class SceneCamera : public SceneTransform
         if(_isDirty)
             calculateNodeTransform();
 
+        state.projection = _perspective;
+
         SceneTransform::render(state);
     }
     void setPerspectiveTransform(glm::mat4 transform)
@@ -32,7 +36,7 @@ class SceneCamera : public SceneTransform
 
     void calculateNodeTransform()
     {
-        this->setTransformation(this->_perspective*this->_world); 
+        this->setTransformation(this->_world); 
     }
 
 };

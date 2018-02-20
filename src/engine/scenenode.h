@@ -7,7 +7,7 @@
 
 using json = nlohmann::json;
 
-enum class SceneNodeType { UNKNOWN, VISUAL, TRANSFORMATION, CAMERA, SHADER };
+enum class SceneNodeType { UNKNOWN, VISUAL, TRANSFORMATION, CAMERA, SHADER,LIGHT };
 class SceneNode : public TreeNode<std::shared_ptr<SceneNode>> {
   protected:
     SceneNodeType _typeOfNode;

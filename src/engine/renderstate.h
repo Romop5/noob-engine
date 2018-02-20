@@ -6,7 +6,9 @@
 struct RenderState
 {
     glm::mat4 mvp;
+    glm::mat4 projection;
     GLuint program;
+    GLint  countOfLights;
 };
 
 #endif
