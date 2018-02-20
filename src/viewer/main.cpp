@@ -12,7 +12,13 @@
 #include <viewer/generator.h>
 
 
-int main() {
+int main(int argc, char** argv) {
+
+    if(argc < 2)
+    {
+        LOG_INFO("USAGE: %s <generationFile>\n",argv[0]);
+        exit(1);
+    }
 
     size_t width = 800;
     size_t height = 600;
@@ -98,9 +104,17 @@ int main() {
     
 
     Generator gen;
-    if(gen.compile("test.gen") != false)
+    std::string name = argv[1];
+    if(gen.compile(name.c_str()))
     {
-        if(gen.generate(objects) == false)
+        bool generationResult = false;
+        if(name.find("cube") != std::string::npos)
+        {
+            generationResult = gen.generateCubes(objects);
+        } else {
+            generationResult = gen.generate(objects);
+        }
+        if(generationResult == false)
             LOG_ERROR("Generation failed\n");
     } else {
         LOG_ERROR("Procedural compilation failed\n");
