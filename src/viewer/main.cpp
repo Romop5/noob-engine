@@ -102,24 +102,26 @@ int main(int argc, char** argv) {
 
     /* GENERATION */
     
-
-    Generator gen;
-    std::string name = argv[1];
-    if(gen.compile(name.c_str()))
+    if(1==1)
     {
-        bool generationResult = false;
-        if(name.find("cube") != std::string::npos)
+    Generator gen;
+        std::string name = argv[1];
+        if(gen.compile(name.c_str()))
         {
-            generationResult = gen.generateCubes(objects);
+            bool generationResult = false;
+            if(name.find("cube") != std::string::npos)
+            {
+                generationResult = gen.generateCubes(objects);
+            } else {
+                generationResult = gen.generate(objects);
+            }
+            if(generationResult == false)
+                LOG_ERROR("Generation failed\n");
         } else {
-            generationResult = gen.generate(objects);
+            LOG_ERROR("Procedural compilation failed\n");
         }
-        if(generationResult == false)
-            LOG_ERROR("Generation failed\n");
-    } else {
-        LOG_ERROR("Procedural compilation failed\n");
-    }
 
+    }
 
     if(engine.getScene() != nullptr)
         LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
