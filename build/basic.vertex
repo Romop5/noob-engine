@@ -1,8 +1,13 @@
-#version 130 core
+#version 130 
 
-layout(location = 0) in vec3 modelPos;
-layout(location = 2) in vec3 modelColor;
-layout(location = 3) in vec3 modelNormal;
+//layout(location = 0) in vec3 modelPos;
+//layout(location = 2) in vec3 modelColor;
+//layout(location = 3) in vec3 modelNormal;
+
+
+in vec3 modelPos;
+in vec3 modelColor;
+in vec3 modelNormal;
 
 uniform mat4 world;
 uniform mat4 projectionview;

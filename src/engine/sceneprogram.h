@@ -65,6 +65,7 @@ class ShaderProgram {
 
             return 0;
         }
+
         return shader;
     }
 
@@ -100,6 +101,10 @@ class ShaderProgram {
 
             return false;
         }
+
+	glBindAttribLocation(shaderProgram, 0, "modelPos");
+	glBindAttribLocation(shaderProgram, 2, "modelColor");
+	glBindAttribLocation(shaderProgram, 3, "modelNormal");
 
         for (auto &shader : compiledShaders) {
             glDetachShader(shaderProgram, shader);

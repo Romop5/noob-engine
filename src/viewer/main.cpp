@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
     LOG_INFO("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
     
-    return 1;
+ //   return 1;
 
     auto model = std::make_shared<SceneVisual>();
     auto mesh = std::make_shared<Primitive>();
