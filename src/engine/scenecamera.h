@@ -25,11 +25,13 @@ class SceneCamera : public SceneTransform
     }
     void setPerspectiveTransform(glm::mat4 transform)
     {
+	LOG_INFO("Transform: perspective  %s\n", glm::to_string(transform).c_str());
         this->_perspective = transform;
         this->_isDirty = true;
     }
     void setViewTransform(glm::mat4 transform)
     {
+	LOG_INFO("Transform: view%s\n", glm::to_string(transform).c_str());
         this->_view = transform;
         this->_isDirty = true;
     }

@@ -33,7 +33,7 @@ cube cCube(vec3 pos, float sz)
 
 int doIt(cube this)
 {
-    float newSize = this.sz/2.0;
+    float newSize = this.sz;
     float cubeSize= this.sz/2.0;
     appendSymbol(cCube(cVec3(this.position.x-newSize,this.position.y-newSize,this.position.z-newSize) ,cubeSize));
 
@@ -55,7 +55,7 @@ using tst = rule cube
 
 int init()
 {
-    appendSymbol(cCube(cVec3(0.0,0.0,0.0),50.0));
-    setMaximumIterations(6);
+    appendSymbol(cCube(cVec3(0.0,0.0,0.0),5.0));
+    setMaximumIterations(5);
 }
 
