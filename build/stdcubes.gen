@@ -1,0 +1,16 @@
+#include "stdlinear.gen"
+using cube = struct
+{
+    vec3 position;
+    vec3 color;
+    float sz;
+};
+
+cube ccube(vec3 in,vec3 color, float sz)
+{
+    cube tmp;
+    tmp.position = in;
+    tmp.color = color;
+    tmp.sz = sz;
+    return tmp;
+}

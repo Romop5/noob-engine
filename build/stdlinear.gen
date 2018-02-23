@@ -1,0 +1,72 @@
+// 2018 Roman Dobias 
+// Purpose: linear algebra for Proc Gen
+
+
+using vec3 = struct {
+    float x;
+    float y;
+    float z;
+};
+
+vec3 cvec3(float a, float b, float c)
+{
+    vec3 tmp;
+    tmp.x = a;
+    tmp.y = b;
+    tmp.z = c;
+    return tmp;
+}
+
+
+vec3 vec3Add(vec3 a, vec3 b)
+{
+    vec3 tmp;
+    tmp.x = a.x + b.x;
+    tmp.y = a.y + b.y;
+    tmp.z = a.z + b.z;
+    return tmp;
+}
+
+vec3 vec3Minus(vec3 a, vec3 b)
+{
+    vec3 tmp;
+    tmp.x = a.x - b.x;
+    tmp.y = a.y - b.y;
+    tmp.z = a.z - b.z;
+    return tmp;
+}
+
+vec3 vec3Mul(vec3 a, vec3 b)
+{
+    vec3 tmp;
+    tmp.x = a.x * b.x;
+    tmp.y = a.y * b.y;
+    tmp.z = a.z * b.z;
+    return tmp;
+}
+
+vec3 vec3One()
+{
+    vec3 tmp;
+    tmp.x = 1.0;
+    tmp.y = 1.0;
+    tmp.z = 1.0;
+    return tmp;
+}
+vec3 vec3What(vec3 a, float sc)
+{
+    a.x = a.x*sc;
+    a.y = a.y*sc;
+    a.z = a.z*sc;
+    return a;
+}
+
+
+vec3 vec3ScalarMul(vec3 a, float sc)
+{
+    a.x = a.x*sc;
+    a.y = a.y*sc;
+    a.z = a.z*sc;
+    return a;
+}
+

@@ -87,7 +87,7 @@ class Generator
                 LOG_DEBUG("Count of objects: %d\n", input.size());
                 for(auto &symbol: input)
                 {
-              //      LOG_DEBUG("Object: %s\n", symbol.dump(1).c_str());
+                    LOG_INFO("Object: %s\n", symbol.dump(1).c_str());
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
                     if(symbol["_type"].get<std::string>() == "cube")
                         processJsonCube(parent, symbol);
@@ -126,7 +126,8 @@ class Generator
             mesh->createBox(color);
             model->appendMesh(mesh);
             auto transform = std::make_shared<SceneTransform>();
-            glm::mat4 matrix = glm::scale(glm::vec3(sz))*glm::translate(position);
+            //glm::mat4 matrix = glm::scale(glm::vec3(sz*0.5))*glm::translate(position);
+            glm::mat4 matrix = glm::translate(position)*glm::scale(glm::vec3(sz*1.0));
             transform->setTransformation(matrix);
             transform->addChild(model);
             return transform;
