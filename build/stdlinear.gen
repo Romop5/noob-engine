@@ -70,3 +70,71 @@ vec3 vec3ScalarMul(vec3 a, float sc)
     return a;
 }
 
+vec3 vec3Dot(vec3 a, vec3 b)
+{
+    return (a.x*b.x + a.y*b.y + a.z*b.z);
+}
+
+
+using mat3 = struct {
+    vec3 a; 
+    vec3 b; 
+    vec3 c; 
+};
+
+mat3 cmat3(vec3 a, vec3 b, vec3 c)
+{
+    mat3 res;
+    res.a = a;
+    res.b = b;
+    res.c = c;
+    return res;
+}
+
+mat3 mat3Transpone(mat3 a)
+{
+    mat3 result;
+    result.a.x = a.a.x;
+    result.a.y = a.b.x;
+    result.a.z = a.c.x;
+
+    result.b.x = a.a.y;
+    result.b.y = a.b.y;
+    result.b.z = a.c.y;
+
+    result.c.x = a.a.z;
+    result.c.y = a.b.z;
+    result.c.z = a.c.z;
+    return result;
+}
+
+mat3 mat3Mul(mat3 a, mat3 b)
+{
+     mat3 transponed = mat3Transpone(a);
+     mat3 result;
+     result.a.x = vec3Dot(transponed.a, b.a);
+     result.a.y = vec3Dot(transponed.b, b.a);
+     result.a.z = vec3Dot(transponed.c, b.a);
+
+     result.b.x = vec3Dot(transponed.a, b.b);
+     result.b.y = vec3Dot(transponed.b, b.b);
+     result.b.z = vec3Dot(transponed.c, b.b);
+
+     result.c.x = vec3Dot(transponed.a, b.c);
+     result.c.y = vec3Dot(transponed.b, b.c);
+     result.c.z = vec3Dot(transponed.c, b.c);
+     return result;
+}
+
+vec3 mat3MulVec3(mat3 b,vec3 a)
+{
+     mat3 transponed = mat3Transpone(a);
+     mat3 result;
+     result.a.x = vec3Dot(transponed.a, a);
+     result.a.y = vec3Dot(transponed.b, a);
+     result.a.z = vec3Dot(transponed.c, a);
+     return result;
+}
+
+
+

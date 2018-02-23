@@ -3,60 +3,108 @@
 using branch = struct {
     cube cb;
     vec3 direction;
+    float duration;
 };
 int init()
 {
     cube cb;
     cb = ccube(cvec3(0.0,0.0,0.0),cvec3(0.545, 0.270, 0.074), 1.0);
-    print(cb);
+    //appendSymbol(cb);
     branch b;
     b.cb = cb;
     b.direction = cvec3(0.0,1.0,0.0);
+    b.duration = 1.0;
     appendSymbol(b);
-    setMaximumIterations(3);
+    setMaximumIterations(15);
 }
+
+int makeUpwards(branch this)
+{
+    float sizeMultiplier = 0.9;
+    // And add new item upwards
+    vec3 backup = this.cb.position;
+    vec3 newPosition;
+    float distance = this.cb.sz+this.cb.sz*sizeMultiplier;
+    newPosition = vec3Add(this.cb.position,
+                               vec3ScalarMul(this.direction,distance));
+
+    this.cb.position = newPosition;
+    this.cb.sz = this.cb.sz*sizeMultiplier;
+    appendSymbol(this);
+
+}
+
+int makeSide(branch this,vec3 newDirections)
+{
+    float sizeMultiplier = 0.8;
+    vec3 backup = this.cb.position;
+    vec3 newPosition;
+    this.direction = newDirections;
+    float distance = this.cb.sz+this.cb.sz*sizeMultiplier;
+    newPosition = vec3Add(this.cb.position,
+                               vec3ScalarMul(this.direction,distance));
+
+    this.cb.position = newPosition;
+    this.cb.sz = this.cb.sz*sizeMultiplier;
+    appendSymbol(this);
+    this.duration = this.duration * 0.5;
+}
+
+
 
 // Extend upwards
 using brnch = rule branch {
+    if(this.direction.y < 0.0)
+    {
+        return false;
+    }
     return true;
 } {
     branch oldOne = this;
     // Replace current branch with cube
     appendSymbol(this.cb);
-
-    // And add new item upwards
-    vec3 backup = this.cb.position;
-    vec3 newPosition;
-    float distance = this.cb.sz+this.cb.sz*0.5;
-    newPosition = vec3Add(this.cb.position,
-                               vec3ScalarMul(this.direction,distance));
-
-    this.cb.position = newPosition;
-    this.cb.sz = this.cb.sz*0.5;
-    appendSymbol(this);
+    this.duration = this.duration*0.5;
+    
+    makeUpwards(this);
 };
 
 // Extend upwards
 using brnch = rule branch {
-    return true;
+    if(this.cb.position.y < 3.0)
+    {
+        return false;
+    }
+
+    if(random() < 0.8)
+    {  
+        return true;
+    }
+    return false;
 } {
+
+    this.duration = this.duration*0.5;
     branch oldOne = this;
     // Replace current branch with cube
     appendSymbol(oldOne.cb);
-
-    // And add new item upwards
-    vec3 backup = this.cb.position;
-    vec3 newPosition;
-    vec3 oldDir = this.direction;
-    this.direction.x = oldDir.y;
-    this.direction.z = oldDir.x;
-    this.direction.y = oldDir.z;
-    float distance = this.cb.sz+this.cb.sz*0.5;
-    newPosition = vec3Add(this.cb.position,
-                               vec3ScalarMul(this.direction,distance));
-
-    this.cb.position = newPosition;
-    this.cb.sz = this.cb.sz*0.5;
-    appendSymbol(this);
+    makeUpwards(this);
+    if(random() < 0.0)
+    {
+        makeSide(this,cvec3(this.direction.y, this.direction.x, this.direction.z));
+        makeSide(this,cvec3(-this.direction.y, this.direction.x, this.direction.z));
+    } else {
+        makeSide(this,cvec3(this.direction.z, this.direction.x, this.direction.y));
+        makeSide(this,cvec3(this.direction.z, this.direction.x, -this.direction.y));
+    }
 };
 
+using leaf = rule branch {
+    if(this.cb.sz < 0.2)
+    {
+        return true;
+    }
+    return false;
+} {
+    this.cb.color = cvec3(0.184, 0.874, 0.066);
+    this.cb.sz = this.cb.sz*2.0;
+    appendSymbol(this.cb);
+};
