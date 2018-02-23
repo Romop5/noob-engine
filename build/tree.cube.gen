@@ -1,0 +1,62 @@
+#include "stdcubes.gen"
+
+using branch = struct {
+    cube cb;
+    vec3 direction;
+};
+int init()
+{
+    cube cb;
+    cb = ccube(cvec3(0.0,0.0,0.0),cvec3(0.545, 0.270, 0.074), 1.0);
+    print(cb);
+    branch b;
+    b.cb = cb;
+    b.direction = cvec3(0.0,1.0,0.0);
+    appendSymbol(b);
+    setMaximumIterations(3);
+}
+
+// Extend upwards
+using brnch = rule branch {
+    return true;
+} {
+    branch oldOne = this;
+    // Replace current branch with cube
+    appendSymbol(this.cb);
+
+    // And add new item upwards
+    vec3 backup = this.cb.position;
+    vec3 newPosition;
+    float distance = this.cb.sz+this.cb.sz*0.5;
+    newPosition = vec3Add(this.cb.position,
+                               vec3ScalarMul(this.direction,distance));
+
+    this.cb.position = newPosition;
+    this.cb.sz = this.cb.sz*0.5;
+    appendSymbol(this);
+};
+
+// Extend upwards
+using brnch = rule branch {
+    return true;
+} {
+    branch oldOne = this;
+    // Replace current branch with cube
+    appendSymbol(oldOne.cb);
+
+    // And add new item upwards
+    vec3 backup = this.cb.position;
+    vec3 newPosition;
+    vec3 oldDir = this.direction;
+    this.direction.x = oldDir.y;
+    this.direction.z = oldDir.x;
+    this.direction.y = oldDir.z;
+    float distance = this.cb.sz+this.cb.sz*0.5;
+    newPosition = vec3Add(this.cb.position,
+                               vec3ScalarMul(this.direction,distance));
+
+    this.cb.position = newPosition;
+    this.cb.sz = this.cb.sz*0.5;
+    appendSymbol(this);
+};
+

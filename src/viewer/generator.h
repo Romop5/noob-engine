@@ -87,7 +87,7 @@ class Generator
                 LOG_DEBUG("Count of objects: %d\n", input.size());
                 for(auto &symbol: input)
                 {
-              //      LOG_DEBUG("Object: %s\n", symbol.dump(1).c_str());
+                    LOG_INFO("Object: %s\n", symbol.dump(1).c_str());
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
                     if(symbol["_type"].get<std::string>() == "cube")
                         processJsonCube(parent, symbol);
@@ -104,19 +104,30 @@ class Generator
             position[1] = jsonPosition["y"].get<double>();
             position[2] = jsonPosition["z"].get<double>();
             double size = cube["sz"].get<double>();
+
+            glm::vec3 color = glm::vec3(0.1,0.1,0.1);
+            json jsonColor = cube["color"];
+            if(cube["color"] != nullptr)
+            {
+                color[0] = jsonColor["x"].get<double>();
+                color[1] = jsonColor["y"].get<double>();
+                color[2] = jsonColor["z"].get<double>();
+            }
+
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Size: %g\n", size);
-            parent->addChild(this->createModelFromCube(position, size));
+            parent->addChild(this->createModelFromCube(position, size,color));
         }
 
-        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, float sz)
+        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, float sz, glm::vec3 color)
         {
             auto model = std::make_shared<SceneVisual>();
             auto mesh = std::make_shared<Primitive>();
-            mesh->createBox();
+            mesh->createBox(color);
             model->appendMesh(mesh);
             auto transform = std::make_shared<SceneTransform>();
-            glm::mat4 matrix = glm::scale(glm::vec3(sz))*glm::translate(position);
+            //glm::mat4 matrix = glm::scale(glm::vec3(sz*0.5))*glm::translate(position);
+            glm::mat4 matrix = glm::translate(position)*glm::scale(glm::vec3(sz*1.0));
             transform->setTransformation(matrix);
             transform->addChild(model);
             return transform;
