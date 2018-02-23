@@ -87,6 +87,11 @@ class ShaderProgram {
         shaderProgram = glCreateProgram();
         for (auto &shader : compiledShaders)
             glAttachShader(shaderProgram, shader);
+
+        glBindAttribLocation(shaderProgram, 0, "modelPos");
+        glBindAttribLocation(shaderProgram, 2, "modelColor");
+        glBindAttribLocation(shaderProgram, 3, "modelNormal");
+
         glLinkProgram(shaderProgram);
 
         GLint Result = GL_FALSE;
@@ -102,9 +107,8 @@ class ShaderProgram {
             return false;
         }
 
-	glBindAttribLocation(shaderProgram, 0, "modelPos");
-	glBindAttribLocation(shaderProgram, 2, "modelColor");
-	glBindAttribLocation(shaderProgram, 3, "modelNormal");
+
+     
 
         for (auto &shader : compiledShaders) {
             glDetachShader(shaderProgram, shader);
