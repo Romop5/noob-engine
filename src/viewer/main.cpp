@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
 
     size_t width = 800;
     size_t height = 600;
+
     LOG_INFO("Starting viewer\n");
     auto tree = std::make_shared<SceneNode>();
 
@@ -32,7 +33,7 @@ int main(int argc, char** argv) {
     cameraNode->addChild(nodeB);
 
 
-    nodeB->setTransformation(glm::translate(glm::mat4(), glm::vec3(0.0,0.0,10.0)));
+    nodeB->setTransformation(glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,10.0)));
 
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
   
@@ -50,6 +51,10 @@ int main(int argc, char** argv) {
     engine.setScene(tree);
     engine.createWindows(800, 600);
 
+    LOG_INFO("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
+    
+    return 1;
+
     auto model = std::make_shared<SceneVisual>();
     auto mesh = std::make_shared<Primitive>();
     mesh->createBox();
@@ -63,7 +68,7 @@ int main(int argc, char** argv) {
 
     auto submeshTransfor = std::make_shared<SceneTransform>();
     submeshTransfor->setTransformation(
-            glm::translate(glm::scale(glm::mat4(),glm::vec3(2.0,2.0,2.0)), glm::vec3(0,3.0,0)));
+            glm::translate(glm::scale(glm::mat4(1.0),glm::vec3(2.0,2.0,2.0)), glm::vec3(0,3.0,0)));
 
     submeshTransfor->addChild(submodel);
     model->addChild(submeshTransfor);

@@ -10,6 +10,8 @@
 #include <vector>
 #include <cstdio>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/ext.hpp>
 
