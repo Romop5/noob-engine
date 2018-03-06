@@ -56,6 +56,6 @@ using tst = rule cube
 int init()
 {
     appendSymbol(cCube(cVec3(0.0,0.0,0.0),5.0));
-    setMaximumIterations(5);
+    setMaximumIterations(7);
 }
 

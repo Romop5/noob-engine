@@ -1,0 +1,78 @@
+using vec3 = struct
+{
+    float x;
+    float y;
+    float z;
+};
+
+vec3 cVec3(float x, float y, float z)
+{
+    vec3 tmp;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.z = z;
+    return tmp;
+}
+
+using cube = struct
+{
+    vec3 position;
+    float sz;
+};
+
+cube cCube(vec3 pos, float sz)
+{
+    cube tmp;
+    tmp.position = pos;
+    tmp.sz = sz;
+    return tmp;
+}
+
+int doIt(cube this)
+{
+    float newSize = this.sz/2.0;
+    appendSymbol(cCube(cVec3(this.position.x-this.sz,this.position.y-this.sz,this.position.z) ,newSize));
+
+    appendSymbol(cCube(cVec3(this.position.x+this.sz,this.position.y-this.sz,this.position.z) ,newSize));
+
+    appendSymbol(cCube(cVec3(this.position.x,this.position.y,this.position.z) ,newSize));
+
+}
+
+using rl = rule cube
+{
+    return true;
+}
+{
+    doIt(this);
+};
+
+using rl = rule cube
+{
+    if(random() < 0.5)
+    {
+        return true;
+    }
+    return false;
+}
+{
+    doIt(this);
+    float sz = this.sz;
+    this.sz = this.sz*random();
+    this.position.z = this.position.z + this.sz;
+    doIt(this);
+    this.sz = this.sz*random();
+    this.position.z = this.position.z - 2.0*this.sz;
+    doIt(this);
+};
+
+
+
+
+int init()
+{
+    appendSymbol(cCube(cVec3(0.0,5.0,0.0),20.0));
+    //appendSymbol(cCube(cVec3(0.0,0.0,10.0),10.0));
+    //appendSymbol(cCube(cVec3(0.0,0.0,-10.0),10.0));
+}
+

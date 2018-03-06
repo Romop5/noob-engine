@@ -1,0 +1,83 @@
+
+using vec3 = struct
+{
+    float x;
+    float y;
+    float z;
+};
+
+vec3 cVec3(float x, float y, float z)
+{
+    vec3 tmp;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.z = z;
+    return tmp;
+}
+
+using vertex = struct
+{
+    vec3 position;
+    vec3 color;
+};
+
+vertex cVertex(vec3 position)
+{
+    vertex tmp;
+    tmp.position = position;
+    tmp.color = cVec3(1.0,1.0,1.0);
+    return tmp;
+}
+
+using triangle = struct
+{
+    vertex a;
+    vertex b;
+    vertex c;
+};
+
+triangle cTriangle(vertex a, vertex b, vertex c)
+{
+    triangle tmp;
+    tmp.a = a;
+    tmp.b = b;
+    tmp.c = c;
+    return tmp;
+}
+
+int makeCube(vec3 position, float sz)
+{
+    // front 
+/*    appendSymbol(cTriangle(
+                cVertex(cVec3(-1.0,-1.0,1.0)),
+                cVertex(cVec3(1.0,-1.0,1.0)),
+                cVertex(cVec3(-1.0,1.0,1.0))));
+*/
+    vertex a = cVertex(cVec3(-1.0,-1.0,1.0));
+    vertex b = cVertex(cVec3(1.0,-1.0,1.0));
+    vertex c = cVertex(cVec3(-1.0,1.0,1.0));
+    appendSymbol(cTriangle(a,b,c));
+}
+/*
+    appendSymbol(cTriangle(
+                cVertex(cVec3(-1.0,-1.0,1.0)),
+                cVertex(cVec3(1.0,-1.0,1.0)),
+                cVertex(cVec3(-1.0,1.0,1.0))));
+    // back 
+    appendSymbol(cTriangle(
+                cVertex(cVec3(-1.0,-1.0,-1.0)),
+                cVertex(cVec3(1.0,-1.0,-1.0)),
+                cVertex(cVec3(-1.0,1.0,-1.0))));
+
+    appendSymbol(cTriangle(
+                cVertex(cVec3(-1.0,-1.0,-1.0)),
+                cVertex(cVec3(1.0,-1.0,-1.0)),
+                cVertex(cVec3(-1.0,1.0,-1.0))));
+*/
+
+int init()
+{
+    makeCube(cVec3(0.0,0.0,0.0), 10.0);
+    setMaximumIterations(1);
+}
+
