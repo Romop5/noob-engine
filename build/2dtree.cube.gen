@@ -1,0 +1,48 @@
+#include "stdcubes.gen"
+
+using meta = struct 
+{
+    vec3 position;
+    vec3 direction;
+};
+
+meta cmeta(vec3 pos, vec3 dir)
+{
+    meta tmp;
+    tmp.position = pos;
+    tmp.direction = dir;
+    return tmp;
+}
+
+int init()
+{
+
+    appendSymbol(cmeta(cvec3(0.0,0.0,0.0),cvec3(0.0,1.0,0.0)));
+    setMaximumIterations(5);
+}
+
+
+using upwardsRule = rule meta
+{
+    return true;
+}
+{
+    appendSymbol(ccube(this.position,cvec3(0.0,1.0,0.0),1.0)); 
+
+    if(random() < 0.5)
+    {
+        appendSymbol(cmeta(vec3Add(this.position,this.direction), this.direction));
+    } else {
+        float randomNumber = random();
+        print(randomNumber);
+        if(randomNumber < 0.5)
+        {
+            appendSymbol(cmeta(vec3Add(this.position,cvec3(1.0,0.0,0.0)), this.direction));
+        } else {
+            appendSymbol(cmeta(vec3Add(this.position,cvec3(-1.0,0.0,0.0)), this.direction));
+        }
+    }
+};
+
+
+

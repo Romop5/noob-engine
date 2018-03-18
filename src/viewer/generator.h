@@ -2,7 +2,7 @@
 #include <engine/scenevisual.h>
 #include <engine/mesh.h>
 #include <viewer/primitives.h>
-#include "procgen.h"
+#include <procgen/parser/procgen.h>
 class Generator
 {
 
@@ -91,6 +91,9 @@ class Generator
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
                     if(symbol["_type"].get<std::string>() == "cube")
                         processJsonCube(parent, symbol);
+
+                    if(symbol["_type"].get<std::string>() == "block")
+                        processJsonBlock(parent, symbol);
                 }
         }
 
@@ -116,10 +119,48 @@ class Generator
 
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Size: %g\n", size);
+            parent->addChild(this->createModelFromCube(position, glm::vec3(size),color));
+        }
+
+        void processJsonBlock(std::shared_ptr<SceneNode> parent, json block)
+        {
+            
+            //LOG_DEBUG("Cube: %s\n", cube.dump(1).c_str());
+            json jsonPosition = block["position"];
+            glm::vec3 position;
+            position[0] = jsonPosition["x"].get<double>();
+            position[1] = jsonPosition["y"].get<double>();
+            position[2] = jsonPosition["z"].get<double>();
+
+            glm::vec3 color = glm::vec3(0.1,0.1,0.1);
+            json jsonColor = block["color"];
+            if(block["color"] != nullptr)
+            {
+                color[0] = jsonColor["x"].get<double>();
+                color[1] = jsonColor["y"].get<double>();
+                color[2] = jsonColor["z"].get<double>();
+            }
+
+            glm::vec3 size  = glm::vec3(1.0,1.0,0.1);
+            json jsonSize = block["sz"];
+            if(block["sz"] != nullptr)
+            {
+                size[0] = jsonSize["x"].get<double>();
+                size[1] = jsonSize["y"].get<double>();
+                size[2] = jsonSize["z"].get<double>();
+            }
+
+
+            LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
+            LOG_DEBUG("Read color : %s\n", glm::to_string(color).c_str());
+            LOG_DEBUG("Read size: %s\n", glm::to_string(size).c_str());
             parent->addChild(this->createModelFromCube(position, size,color));
         }
 
-        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, float sz, glm::vec3 color)
+
+
+
+        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, glm::vec3 sz, glm::vec3 color)
         {
             auto model = std::make_shared<SceneVisual>();
             auto mesh = std::make_shared<Primitive>();
@@ -127,7 +168,7 @@ class Generator
             model->appendMesh(mesh);
             auto transform = std::make_shared<SceneTransform>();
             //glm::mat4 matrix = glm::scale(glm::vec3(sz*0.5))*glm::translate(position);
-            glm::mat4 matrix = glm::translate(position)*glm::scale(glm::vec3(sz*1.0));
+            glm::mat4 matrix = glm::translate(position)*glm::scale(sz);
             transform->setTransformation(matrix);
             transform->addChild(model);
             return transform;
