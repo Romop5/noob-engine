@@ -1,0 +1,46 @@
+#include "stdcubes.gen"
+
+int init()
+{
+    appendSymbol(cblock(cvec3(0.0,0.0,0.0), cvec3(0.0,0.3,0.0),cvec3(1.0,1.0,1.0)));
+    setMaximumIterations(4);
+}
+
+using cubeStep = rule block
+{
+    return true;
+}
+{
+    // Take this and create 3x3 mesh of cubes with holes
+    
+    float newSize = this.sz.x/3.0;
+    float divisor = 1.0/3.0;
+    vec3 newSizeVec = vec3ScalarMul(this.sz, divisor);
+    vec3 newOffset= vec3ScalarMul(this.sz, divisor);
+
+    // Put it into mesh
+    
+    // Middle
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,0.0,1.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,0.0,1.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,0.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,0.0,-1.0))), this.color, newSizeVec));
+
+
+    // top
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,1.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,1.0,1.0))), this.color, newSizeVec));
+
+
+    // bottom
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,-1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,-1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,-1.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,-1.0,1.0))), this.color, newSizeVec));
+
+    
+    //center
+    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,0.0,0.0))), this.color, newSizeVec));
+};

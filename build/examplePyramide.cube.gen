@@ -1,0 +1,32 @@
+// Pyramide 
+// Roman Dobias
+//
+#include "stdcubes.gen"
+
+int init()
+{
+    appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0,0,0),5.0));
+    setMaximumIterations(5);
+}
+
+int doIt(cube this)
+{
+    float newSize = this.sz/2.0;
+    float cubeSize= this.sz/2.0;
+    appendSymbol(ccube(cvec3(this.position.x-newSize,this.position.y-newSize,this.position.z-newSize) ,this.color,cubeSize));
+
+    appendSymbol(ccube(cvec3(this.position.x+newSize,this.position.y-newSize,this.position.z-newSize) ,this.color, cubeSize));
+
+    appendSymbol(ccube(cvec3(this.position.x,this.position.y-newSize,this.position.z+newSize) ,this.color, cubeSize));
+
+    appendSymbol(ccube(cvec3(this.position.x,this.position.y+newSize,this.position.z) ,this.color, cubeSize));
+
+}
+
+using tst = rule cube
+{
+    return true;
+} {
+    doIt(this);
+};
+
