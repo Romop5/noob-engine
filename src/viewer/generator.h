@@ -168,6 +168,7 @@ class Generator
             model->appendMesh(mesh);
             auto transform = std::make_shared<SceneTransform>();
             //glm::mat4 matrix = glm::scale(glm::vec3(sz*0.5))*glm::translate(position);
+            //glm::mat4 matrix = glm::scale(sz)*glm::translate(position);
             glm::mat4 matrix = glm::translate(position)*glm::scale(sz);
             transform->setTransformation(matrix);
             transform->addChild(model);
