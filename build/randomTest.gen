@@ -1,0 +1,10 @@
+int init()
+{
+    int i = 1000;
+    while(i > 1)
+    {
+        print(i);
+        print(random());
+        i = i - 1;
+    }
+}

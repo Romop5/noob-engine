@@ -5,7 +5,6 @@ using branch = struct {
     vec3 direction;
     float duration;
 };
-
 int init()
 {
     cube cb;

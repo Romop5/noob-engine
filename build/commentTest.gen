@@ -1,0 +1,8 @@
+int init()
+{
+    /* ddadadsad
+     *
+     *
+     * ** */
+    appendSymbol(1);
+}

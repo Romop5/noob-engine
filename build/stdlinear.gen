@@ -70,7 +70,7 @@ vec3 vec3ScalarMul(vec3 a, float sc)
     return a;
 }
 
-vec3 vec3Dot(vec3 a, vec3 b)
+float vec3Dot(vec3 a, vec3 b)
 {
     return (a.x*b.x + a.y*b.y + a.z*b.z);
 }
@@ -128,13 +128,25 @@ mat3 mat3Mul(mat3 a, mat3 b)
 
 vec3 mat3MulVec3(mat3 b,vec3 a)
 {
-     mat3 transponed = mat3Transpone(a);
+     mat3 transponed = mat3Transpone(b);
      mat3 result;
      result.a.x = vec3Dot(transponed.a, a);
      result.a.y = vec3Dot(transponed.b, a);
      result.a.z = vec3Dot(transponed.c, a);
      return result;
 }
+
+
+vec3 rotate90Degrees(vec3 dir)
+{
+    return cvec3(dir.z*-1.0, dir.y, dir.x);
+}
+
+vec3 rotate90DegreesOpposite(vec3 dir)
+{
+    return cvec3(dir.z*1.0, dir.y, dir.x*-1.0);
+}
+
 
 
 
