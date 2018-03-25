@@ -6,13 +6,28 @@
 
 bool Engine::createWindows(float width, float heigth) {
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+
+
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
         return false;
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+ 
     this->_window =
         SDL_CreateWindow("NoobEngine Pro-Alfa-Noob version 666", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                          width, heigth, SDL_WINDOW_OPENGL);
 
     _mainContext = SDL_GL_CreateContext(this->_window);
+
+    // init GUI
+    _gui.init(this->_window);
+
 
 #ifndef __APPLE__
     glewExperimental = GL_TRUE;
@@ -49,7 +64,11 @@ void Engine::render() {
     RenderState rs;
     rs.mvp = glm::mat4(1.0);
     rs.program = 0;
+    // Render scene
     this->getScene()->render(rs);
+
+    // render GUI
+    _gui.render();
 
     SDL_GL_SwapWindow(this->_window);
 }
