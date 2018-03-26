@@ -10,6 +10,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 ########
 set(ENGINE_RESOURCES
     ./src/engine/engine.cpp
+    ./src/gui/gui.cpp
+    ./src/gui/imgui_impl_sdl_gl3.cpp
 )
 
 add_subdirectory(vendors)
@@ -20,7 +22,7 @@ find_package(SDL2 REQUIRED)
 find_package(GLEW REQUIRED)
 
 add_library(engine ${ENGINE_RESOURCES})
-target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ImGui) 
 target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
 ########

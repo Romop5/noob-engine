@@ -4,3 +4,6 @@
 [submodule "vendors/imgui"]
 	path = vendors/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "vendors/imgui-cmake"]
+	path = vendors/imgui-cmake
+	url = https://github.com/tamaskenez/imgui-cmake

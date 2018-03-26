@@ -7,6 +7,8 @@
 #include <engine/scenetransform.h>
 #include <engine/scenevisual.h>
 #include <engine/scenelight.h>
+#include <gui/gui.h>
+
 #include <SDL2/SDL.h>
 
 // OpenGL / glew Headers
@@ -17,6 +19,7 @@ class Engine {
     std::shared_ptr<SceneNode> _scene;
     SDL_Window *_window;
     SDL_GLContext _mainContext;
+    GUI		_gui;
     bool _isRunning;
     std::function<void(SDL_Event)>  _messageCallback;
   public:
@@ -31,5 +34,6 @@ class Engine {
     void handleEvents();
     bool isRunning() const { return this->_isRunning; }
     void setMessageCallback(std::function<void(SDL_Event)> callback);
+    GUI& getGUI() { return this->_gui;}
 };
 #endif

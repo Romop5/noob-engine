@@ -12,6 +12,7 @@
 #include <viewer/generator.h>
 
 
+
 int main(int argc, char** argv) {
 
     if(argc < 2)
@@ -131,6 +132,11 @@ int main(int argc, char** argv) {
     if(engine.getScene() != nullptr)
         LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
+    engine.getGUI().registerCallback(
+		    [] {
+			     ImGui::Text("Hello, world!");
+		    }
+		    );
     /*  RENDERING LOOP */
     while (engine.isRunning()) {
         auto passStart = std::chrono::high_resolution_clock::now();
