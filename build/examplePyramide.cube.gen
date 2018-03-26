@@ -5,8 +5,8 @@
 
 int init()
 {
-    appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0,0,0),5.0));
-    setMaximumIterations(5);
+    appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0.0,0.0,0.0),5.0));
+    setMaximumIterations(4);
 }
 
 int doIt(cube this)

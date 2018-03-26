@@ -1,41 +1,30 @@
 #include "stdcubes.gen"
 
-float cos(float x)
-{
-    if(x > 3.14*2.0)
-    {
-        x = x - 6.28*int(x / 6.28);
-    }
-    
-    float x2 = x*x;
-    float sum = 1.0;
-    int precisionCount = 3;
-    float member = x2/2.0;
-    float multiplier = 3.0;
-    while(precisionCount > 0)
-    {
-        precisionCount = precisionCount -1;
-        sum = sum - member;
-        member = member*(x2/(multiplier*(multiplier+1.0)));
-        multiplier = multiplier + 2.0;
-
-
-        sum = sum + member;
-        member = member*(x2/(multiplier*(multiplier+1.0)));
-        multiplier = multiplier + 2.0;
-    }
-    return sum;
-}
-
-
-
 int init()
 {
-    int steps = 5000;
-    while(steps > 0)
+    /*while(steps > 0)
     {
         steps = steps -1;
-        //appendSymbol(cvec3(steps*0.1,cos(steps*0.1),0.0));
         appendSymbol(ccube(cvec3(steps*3.0, 10.0*cos(steps*0.1),0.0), cvec3(1.0,0.0,0.0), 1.0));
     }
+    */
+
+
+    float x = 0.0;
+    float step = 0.2;
+    while(x < 10.0)
+    {
+        float y = 0.0;
+        while(y < 10.0)
+        {
+            // do the stuff
+
+            float cubeX = x;
+            float cubeY = y;
+            appendSymbol(ccube(cvec3(cubeX,sin(cubeX+cubeY),cubeY), cvec3(0.0,x,y), step*0.5));
+            y += step;
+        }
+        x += step;
+    }
+   
 }
