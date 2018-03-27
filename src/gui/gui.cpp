@@ -35,9 +35,8 @@ void GUI::render()
 		pair.second();
 	}
 	// Render GUI
-    ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
-        ImGui::Render();
-        ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
+    ImGui::Render();
+    ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 CALLBACK_ID GUI::registerCallback(callbackFunc func)
@@ -49,4 +48,9 @@ CALLBACK_ID GUI::registerCallback(callbackFunc func)
 void GUI::deleteCallback(CALLBACK_ID func)
 {
 	this->_callback.erase(this->callbackId);
+}
+
+void GUI::handleInput(SDL_Event& event)
+{
+    ImGui_ImplSdlGL3_ProcessEvent(&event);
 }

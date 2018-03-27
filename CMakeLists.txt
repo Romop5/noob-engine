@@ -16,6 +16,7 @@ set(ENGINE_RESOURCES
 
 add_subdirectory(vendors)
 
+find_package(Threads REQUIRED)
 find_package(GLM REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
@@ -34,6 +35,10 @@ set(VIEWER_RESOURCES
 )
 add_executable(viewer ${VIEWER_RESOURCES})
 target_link_libraries(viewer engine procgen)
+
+
+add_executable(editor ./src/viewer/editor.cpp) 
+target_link_libraries(editor engine procgen ${CMAKE_THREAD_LIBS_INIT})
 
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

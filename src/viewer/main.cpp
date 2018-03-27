@@ -21,8 +21,8 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    size_t width = 800;
-    size_t height = 600;
+    size_t width = 1200;
+    size_t height = 800;
 
     LOG_INFO("Starting viewer\n");
     auto tree = std::make_shared<SceneNode>();
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
      */
     Engine engine;
     engine.setScene(tree);
-    engine.createWindows(800, 600);
+    engine.createWindows(width, height);
 
     LOG_INFO("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
     
@@ -129,14 +129,9 @@ int main(int argc, char** argv) {
 
     }
 
-    if(engine.getScene() != nullptr)
-        LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
+    //if(engine.getScene() != nullptr)
+      //  LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
-    engine.getGUI().registerCallback(
-		    [] {
-			     ImGui::Text("Hello, world!");
-		    }
-		    );
     /*  RENDERING LOOP */
     while (engine.isRunning()) {
         auto passStart = std::chrono::high_resolution_clock::now();

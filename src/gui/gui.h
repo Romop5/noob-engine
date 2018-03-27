@@ -23,5 +23,6 @@ class GUI
 	void render();
 	CALLBACK_ID registerCallback(callbackFunc func);
 	void deleteCallback(CALLBACK_ID func);
+    void handleInput(SDL_Event& event);
 
 };

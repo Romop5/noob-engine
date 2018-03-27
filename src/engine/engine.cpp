@@ -83,6 +83,7 @@ void Engine::handleEvents() {
         }
         if(this->_messageCallback != nullptr)
             this->_messageCallback(event);
+        this->_gui.handleInput(event);
     }
 }
 

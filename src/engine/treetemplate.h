@@ -12,5 +12,6 @@ template <class T> class TreeNode {
     void detachChild(const size_t position) {
         this->children.erase(children.begin() + position);
     }
+    void clearChildren() { this->children.clear(); }
 };
 #endif

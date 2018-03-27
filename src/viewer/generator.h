@@ -31,6 +31,21 @@ class Generator
             produceCubesFromJson(parent, result);
             return true; 
         }
+        bool generate()
+        {
+             if(this->pg.runInit() == false)
+                    return false;
+
+            this->pg.run(0);
+        }
+
+        bool produceOutput(std::shared_ptr<SceneNode> parent)
+        {
+            json result = this->pg.serialize();
+            produceCubesFromJson(parent, result);
+            return true; 
+        }
+ 
         bool generate(std::shared_ptr<SceneNode> parent)
         {
              if(this->pg.runInit() == false)
