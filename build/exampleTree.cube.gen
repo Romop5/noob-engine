@@ -34,7 +34,7 @@ root croot(vec3 pos, vec3 dir,  float rad)
 //-------------------------------------
 int init()
 {
-    appendSymbol(croot(cvec3(0.0,0.0,0.0),cvec3(0,1.0,0),1.0));
+    appendSymbol(croot(cvec3(0.0,0.0,0.0),cvec3(0.0,1.0,0.0),1.0));
  //   setMaximumIterations(5);
 }
 
