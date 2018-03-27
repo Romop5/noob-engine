@@ -7,7 +7,7 @@ class Primitive: public Mesh
     public:
         void createBox(glm::vec3 color = glm::vec3(0.0))
         {
-            LOG_INFO("Adding box with color: %s\n", glm::to_string(color).c_str());
+            LOG_DEBUG("Adding box with color: %s\n", glm::to_string(color).c_str());
             std::vector<Triangle> triangles;
             // front 
             triangles.push_back( {

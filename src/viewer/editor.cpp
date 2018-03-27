@@ -150,6 +150,7 @@ int main(int argc, char** argv) {
                 static bool open = true;
                 ImGui::Begin("Editor", &open, ImGuiWindowFlags_AlwaysAutoResize);
                 ImGui::Text("Choose the script you want to show. ");
+                ImGui::Text("State: %d", scriptmachine->hasJob());
                 ImGui::Separator();
                 for(auto &file: files)
                 {
@@ -161,15 +162,20 @@ int main(int argc, char** argv) {
                 }
                 
                 ImGui::End();
-               
+              
+                if(scriptmachine->hasJob())
+                    ImGui::OpenPopup("Loading"); 
+                if(ImGui::BeginPopupModal("Loading"))
+                {
+                    if(!scriptmachine->hasJob())
+                        ImGui::CloseCurrentPopup();
+                    ImGui::Text("Wait till loading finishes");
+                    ImGui::EndPopup();
+                }
+                
+                
             }
 		    );
-   engine.getGUI().registerCallback(
-           [] {
-                
-                    ImGui::ShowDemoWindow(NULL);
-           });
-
     /*  RENDERING LOOP */
     while (engine.isRunning()) {
         auto passStart = std::chrono::high_resolution_clock::now();

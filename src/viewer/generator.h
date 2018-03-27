@@ -37,6 +37,7 @@ class Generator
                     return false;
 
             this->pg.run(0);
+            return true;
         }
 
         bool produceOutput(std::shared_ptr<SceneNode> parent)
@@ -102,7 +103,7 @@ class Generator
                 LOG_DEBUG("Count of objects: %d\n", input.size());
                 for(auto &symbol: input)
                 {
-                    LOG_INFO("Object: %s\n", symbol.dump(1).c_str());
+                    LOG_DEBUG("Object: %s\n", symbol.dump(1).c_str());
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
                     if(symbol["_type"].get<std::string>() == "cube")
                         processJsonCube(parent, symbol);

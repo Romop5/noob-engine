@@ -66,7 +66,7 @@ class Mesh {
     #define ENABLE_VERTEX_ATTRIBUTE(attr,SIZE,location)\
         if(flags & VertexAtributes::attr)\
         {\
-            LOG_INFO("Enabling attribute %s of size %d at loc: %d\n", #attr,SIZE,location);\
+            LOG_DEBUG("Enabling attribute %s of size %d at loc: %d\n", #attr,SIZE,location);\
             glEnableVertexAttribArray(location);\
             glVertexAttribPointer(location, \
                                   SIZE, \
