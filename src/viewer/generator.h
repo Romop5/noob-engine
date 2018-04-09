@@ -2,7 +2,7 @@
 #include <engine/scenevisual.h>
 #include <engine/mesh.h>
 #include <viewer/primitives.h>
-#include <procgen/parser/procgen.h>
+#include <procgen/procgen.h>
 class Generator
 {
 
