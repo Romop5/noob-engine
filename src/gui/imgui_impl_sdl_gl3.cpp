@@ -476,7 +476,7 @@ void ImGui_ImplSdlGL3_NewFrame(SDL_Window* window)
 #endif
 
     // Update OS/hardware mouse cursor if imgui isn't drawing a software cursor
-    if ((io.ConfigFlags & ImGuiConfigFlags_NoSetMouseCursor) == 0)
+    if ((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) == 0)
     {
         ImGuiMouseCursor cursor = ImGui::GetMouseCursor();
         if (io.MouseDrawCursor || cursor == ImGuiMouseCursor_None)
