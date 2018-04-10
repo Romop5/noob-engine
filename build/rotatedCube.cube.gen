@@ -1,0 +1,68 @@
+//#include "stdcubes.gen"
+
+#include "arbitraryaxis.procgen"
+
+using block = struct
+{
+    vec3 position;
+    vec3 color;
+    vec3 sz;
+    mat3 rotation;
+};
+
+using metablock = struct {
+    block bck;
+    vec3 normal;
+};
+
+int displayVector(vec3 start, vec3 way)
+{
+    mat3 rotation = getRotationMatrixFromVector(way);
+    vec3 sz = vec3(0.1,0.1,2.0);
+    vec3 rotatedSz = mat3MulVec3(rotation, sz);
+
+    vec3 newPos = vec3Add(start, rotatedSz);
+    appendSymbol(block(newPos, vec3(0.0,0.0,1.0), sz, rotation));
+}
+
+int addExtension(float angle, vec3 start, vec3 normal,vec3 sz)
+{
+    float slopeAngle = 60.0;
+
+    vec3 newVector = getArbitraryVectorWithAngleSecond(normal, slopeAngle);
+    vec3 newNormal = rotateVec3ByVector(newVector, normal, angle);
+
+    vec3 translateVectorTmp = getArbitraryVectorWithAngleSecond(normal, 90.0);
+    vec3 translateVector= rotateVec3ByVector(translateVectorTmp, normal, angle);
+
+    displayVector(start, translateVector);
+
+    mat3 newRotation = getRotationMatrixFromVector(normalizeVec3(newNormal));
+
+    vec3 newStart = vec3Add(start, vec3ScalarMul(translateVector,sz.y*0.5));
+    //appendSymbol(block(newStart, vec3(1.0,0.0,1.0),vec3(1.0,2.0,1.0), newRotation));
+    appendSymbol(metablock(block(newStart, vec3(1.0,0.0,1.0),vec3ScalarMul(sz,0.5), newRotation), newNormal));
+}
+
+
+using grow = rule metablock
+{
+    return true;
+} {
+    appendSymbol(this.bck); 
+    vec3 translateVec = vec3Mul(this.normal, this.bck.sz);
+    addExtension(0.0, vec3Add(this.bck.position,translateVec), this.normal, this.bck.sz);
+    addExtension(120.0, vec3Add(this.bck.position,translateVec), this.normal, this.bck.sz);
+    addExtension(240.0, vec3Add(this.bck.position,translateVec), this.normal, this.bck.sz);
+};
+
+int init()
+{
+    /*appendSymbol(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0),vec3(1.0,2.0,1.0), getIdentity3()));
+    addExtension(0.0, vec3(0.0,4.0,0.0), vec3(0.0,1.0,0.0));
+    addExtension(120.0, vec3(0.0,4.0,0.0), vec3(0.0,1.0,0.0));
+    addExtension(240.0, vec3(0.0,4.0,0.0), vec3(0.0,1.0,0.0));
+    */
+    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0),vec3(1.0,2.0,1.0), getIdentity3()), vec3(0.0,1.0,0.0)));
+    setMaximumIterations(2);
+}
