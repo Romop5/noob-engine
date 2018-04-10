@@ -5,39 +5,122 @@ vec3 normalizeVec3(vec3 input)
     float len = sqrt(input.x*input.x + input.y*input.y + input.z * input.z);
     return vec3ScalarMul(input, 1.0/len);
 }
-vec3 rotateVec3ByVector(vec3 rotatedVector, vec3 axis, float angle)
+
+
+mat3 getRotationMatrixFromVector(vec3 axis)
 {
 
-    float radianAngle = 3.1415*angle / 180.0;
     float d = sqrt(axis.y*axis.y + axis.z*axis.z);
     print(d);
 
-    mat3 rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, - axis.y / d), vec3(0.0, axis.y / d,  axis.z / d));
-    mat3 irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    mat3 irx; 
+    if(d > 0.0)
+    {
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    } else {
+        // set identity
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0, 0.0), vec3(0.0,0.0,1.0));
+    }
+
+    mat3 iry = mat3(vec3(d,0.0,axis.x), vec3(0.0,1.0,0.0), vec3(-axis.x,0.0,d));
+
+    return mat3Mul(irx, iry);
+}
+
+
+vec3 getArbitraryVectorWithAngle(vec3 axis,float angle)
+{
+
+    float radianAngle = 3.1415*angle/ 180.0;
+    float d = sqrt(axis.y*axis.y + axis.z*axis.z);
+    print(d);
+
+    mat3 rx; 
+    mat3 irx; 
+    if(d > 0.0)
+    {
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, - axis.y / d), vec3(0.0, axis.y / d,  axis.z / d));
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    } else {
+        // set identity
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0, 0.0), vec3(0.0,0.0,1.0));
+        irx = rx;
+    }
 
     mat3 ry = mat3(vec3(d,0.0,-axis.x), vec3(0.0,1.0,0.0), vec3(axis.x,0.0,d));
     mat3 iry = mat3(vec3(d,0.0,axis.x), vec3(0.0,1.0,0.0), vec3(-axis.x,0.0,d));
 
     mat3 scale = mat3(vec3(2.0,0.0,0.0), vec3(0.0,2.0, 0.0), vec3(0.0,0.0,2.0));
+    mat3 thetaRotation= mat3(vec3(cos(radianAngle),0.0,-sin(radianAngle)), vec3(0.0,0.0,0.0), vec3(sin(radianAngle),0.0,cos(radianAngle)));
+    mat3 rotationMatrix= mat3Mul(irx, mat3Mul(iry,mat3Mul(thetaRotation, mat3Mul(ry,rx))));
+    print(rotationMatrix);
+
+    return mat3MulVec3(rotationMatrix, axis);
+}
+
+
+
+vec3 getNormalVector(vec3 axis)
+{
+
+    float radianAngle = 3.1415*90.0/ 180.0;
+    float d = sqrt(axis.y*axis.y + axis.z*axis.z);
+    print(d);
+
+    mat3 rx; 
+    mat3 irx; 
+    if(d > 0.0)
+    {
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, - axis.y / d), vec3(0.0, axis.y / d,  axis.z / d));
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    } else {
+        // set identity
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0, 0.0), vec3(0.0,0.0,1.0));
+        irx = rx;
+    }
+
+    mat3 ry = mat3(vec3(d,0.0,-axis.x), vec3(0.0,1.0,0.0), vec3(axis.x,0.0,d));
+    mat3 iry = mat3(vec3(d,0.0,axis.x), vec3(0.0,1.0,0.0), vec3(-axis.x,0.0,d));
+
+    mat3 thetaRotation= mat3(vec3(cos(radianAngle),0.0,-sin(radianAngle)), vec3(0.0,0.0,0.0), vec3(sin(radianAngle),0.0,cos(radianAngle)));
+    mat3 rotationMatrix= mat3Mul(irx, mat3Mul(iry,mat3Mul(thetaRotation, mat3Mul(ry,rx))));
+    print(rotationMatrix);
+
+    return mat3MulVec3(rotationMatrix, axis);
+}
+
+
+
+
+vec3 rotateVec3ByVector(vec3 rotatedVector, vec3 axis, float angle)
+{
+
+    // According to this article 
+    // http://paulbourke.net/geometry/rotate/
+    float radianAngle = 3.1415*angle / 180.0;
+    float d = sqrt(axis.y*axis.y + axis.z*axis.z);
+    print(d);
+
+    mat3 rx; 
+    mat3 irx; 
+    if(d > 0.0)
+    {
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, - axis.y / d), vec3(0.0, axis.y / d,  axis.z / d));
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    } else {
+        // set identity
+        rx = mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0, 0.0), vec3(0.0,0.0,1.0));
+        irx = rx;
+    }
+
+    mat3 ry = mat3(vec3(d,0.0,-axis.x), vec3(0.0,1.0,0.0), vec3(axis.x,0.0,d));
+    mat3 iry = mat3(vec3(d,0.0,axis.x), vec3(0.0,1.0,0.0), vec3(-axis.x,0.0,d));
+
     mat3 thetaRotation= mat3(vec3(cos(radianAngle),-sin(radianAngle),0.0), vec3(sin(radianAngle),cos(radianAngle), 0.0), vec3(0.0,0.0,1.0));
     mat3 rotationMatrix= mat3Mul(irx, mat3Mul(iry,mat3Mul(thetaRotation, mat3Mul(ry,rx))));
     print(rotationMatrix);
 
     return mat3MulVec3(rotationMatrix, rotatedVector);
-    //return vec3(1.0,0.0,0.0);
-
-    print(rotatedVector);
-    vec3 tmp = mat3MulVec3(rx, rotatedVector);
-    print(tmp);
-    vec3 result = mat3MulVec3(ry, tmp);
-    print(result);
-
-    print(1337);
-
-
-    vec3 tmpReverse = mat3MulVec3(iry, result);
-    print(tmpReverse);
-    return mat3MulVec3(irx, tmpReverse);
 }
 
 int init()
@@ -47,4 +130,9 @@ int init()
 
     vec3 tmp = rotateVec3ByVector(vec3(0.0,0.0,1.0), axis, 90.0);
     print(tmp);
+
+    print(getNormalVector(vec3(0.0,1.0, 0.0)));
+    print(getArbitraryVectorWithAngle(vec3(0.0,1.0, 0.0),90.0));
+
+    mat3 rot = getRotationMatrixFromVector(vec3(0.0,1.0,0.0));
 }
