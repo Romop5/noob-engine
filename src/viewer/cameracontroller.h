@@ -15,15 +15,19 @@ class CameraController
     void moveCameraBy(glm::vec3 _offset)
     {
         glm::vec4 towards = glm::inverse(_rotationMatrix)*glm::vec4(_offset,1.0);
-        LOG_INFO("Towards: %s\n", glm::to_string(towards).c_str());
+        //LOG_INFO("Towards: %s\n", glm::to_string(towards).c_str());
         this->_position += glm::vec3(towards);
         this->_isDirty = true;
     }
     void rotateCameraBy(glm::vec2 _offset)
     {
-        this->_rotationMatrix = this->_rotationMatrix
-                    * glm::rotate(_offset.x, glm::vec3(0.0,1.0,0.0))
-                    * glm::rotate(_offset.y, glm::vec3(1.0,0.0,0.0));
+        // Add up current angle with difference
+        this->_angles += _offset;
+
+        auto horizontalRotation = glm::rotate(this->_angles.x, glm::vec3(0.0,1.0,0.0));
+        this->_rotationMatrix = 
+                    glm::rotate(this->_angles.y, glm::vec3(1.0,0.0,0.0))*
+                    horizontalRotation;
         this->_isDirty = true;
     }
     void update()
@@ -57,6 +61,7 @@ class CameraController
         {
             case SDL_KEYDOWN:
             {
+                LOG_INFO("Here we are - and event\n");
                 if(event.key.keysym.sym == SDLK_a)
                     this->moveCameraBy(glm::vec3(1.0,0.0,0.0)); 
 
