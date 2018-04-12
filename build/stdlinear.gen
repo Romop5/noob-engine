@@ -75,7 +75,44 @@ float vec3Dot(vec3 a, vec3 b)
     return (a.x*b.x + a.y*b.y + a.z*b.z);
 }
 
+vec3 vec3Cross(vec3 a, vec3 b)
+{
+    return vec3(a.y*b.z-a.z*b.y, a.x*b.z - a.z*b.x, a.x*b.y - a.y*b.x);
+}
 
+
+
+vec3 vec3GetNormal(vec3 direction)
+{
+    vec3 tmpVector = vec3(direction.y, direction.z, direction.x);
+    return vec3Cross(direction, tmpVector);
+}
+
+vec3 vec3Normalize(vec3 a)
+{
+    float len = sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+    return vec3ScalarMul(a, 1.0/len);
+}
+
+float vec3Length(vec3 a)
+{
+    return sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
+}
+
+// Returns vector which has angle towards way vector
+vec3 vec3VectorWithAngle(vec3 way, float angle)
+{
+    vec3 normalizedWay = vec3Normalize(way);
+    vec3 normalizedNormal = vec3Normalize(vec3GetNormal(way));
+    
+    vec3 rate = vec3(cos(angle), sin(angle),0.0);
+
+    return vec3Add(vec3ScalarMul(normalizedNormal, rate.y), vec3ScalarMul(normalizedWay, rate.x));
+}
+
+
+
+// three rows
 using mat3 = struct {
     vec3 a; 
     vec3 b; 
@@ -110,29 +147,28 @@ mat3 mat3Transpone(mat3 a)
 
 mat3 mat3Mul(mat3 a, mat3 b)
 {
-     mat3 transponed = mat3Transpone(a);
+     mat3 transponed = mat3Transpone(b);
      mat3 result;
-     result.a.x = vec3Dot(transponed.a, b.a);
-     result.a.y = vec3Dot(transponed.b, b.a);
-     result.a.z = vec3Dot(transponed.c, b.a);
+     result.a.x = vec3Dot(transponed.a, a.a);
+     result.a.y = vec3Dot(transponed.b, a.a);
+     result.a.z = vec3Dot(transponed.c, a.a);
 
-     result.b.x = vec3Dot(transponed.a, b.b);
-     result.b.y = vec3Dot(transponed.b, b.b);
-     result.b.z = vec3Dot(transponed.c, b.b);
+     result.b.x = vec3Dot(transponed.a, a.b);
+     result.b.y = vec3Dot(transponed.b, a.b);
+     result.b.z = vec3Dot(transponed.c, a.b);
 
-     result.c.x = vec3Dot(transponed.a, b.c);
-     result.c.y = vec3Dot(transponed.b, b.c);
-     result.c.z = vec3Dot(transponed.c, b.c);
+     result.c.x = vec3Dot(transponed.a, a.c);
+     result.c.y = vec3Dot(transponed.b, a.c);
+     result.c.z = vec3Dot(transponed.c, a.c);
      return result;
 }
 
 vec3 mat3MulVec3(mat3 b,vec3 a)
 {
-     mat3 transponed = mat3Transpone(b);
-     mat3 result;
-     result.a.x = vec3Dot(transponed.a, a);
-     result.a.y = vec3Dot(transponed.b, a);
-     result.a.z = vec3Dot(transponed.c, a);
+     vec3 result;
+     result.x = vec3Dot(b.a, a);
+     result.y = vec3Dot(b.b, a);
+     result.z = vec3Dot(b.c, a);
      return result;
 }
 
@@ -148,5 +184,98 @@ vec3 rotate90DegreesOpposite(vec3 dir)
 }
 
 
+mat3 getIdentity3()
+{
+    return mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0,0.0), vec3(0.0,0.0,1.0));
+}
 
+mat3 rotateX(float angle)
+{
+    return mat3(
+                vec3(1.0,0.0,0.0),
+                vec3(0.0, cos(angle), sin(angle)),
+                vec3(0.0, -sin(angle), cos(angle)));
+}
+
+mat3 rotateY(float angle)
+{
+    return mat3(
+                vec3(cos(angle),0.0, sin(angle)),
+                vec3(0.0,1.0,0.0),
+                vec3(-sin(angle), 0.0, cos(angle)));
+}
+
+mat3 rotateZ(float angle)
+{
+    return mat3(
+                vec3(cos(angle), sin(angle), 0.0),
+                vec3(-sin(angle),cos(angle), 0.0),
+                vec3(0.0,0.0,1.0));
+}
+
+
+
+mat3 mat3RotateArbitrary(vec3 a, float angle)
+{
+    vec3 qa = vec3(a.x*a.y, a.y*a.y, a.z*a.z);
+    mat3 tmp;
+    tmp.a.x = cos(angle)+qa.x*(1.0-cos(angle));
+    tmp.a.y = a.x*a.y*(1.0-cos(angle)) - a.z*sin(angle);
+    tmp.a.z = a.x * a.z * (1.0-cos(angle)) + a.y*sin(angle);
+
+    tmp.b.x = a.x*a.y*(1.0-cos(angle))+a.z*sin(angle);
+    tmp.b.y = cos(angle) + qa.y*(1-cos(angle));
+    tmp.b.z = a.y*a.z*(1.0-cos(angle))-a.x*sin(angle);
+
+    tmp.c.x = a.z*a.x*(1.0-cos(angle))-a.y*sin(angle);
+    tmp.c.y = a.z*a.y*(1.0-cos(angle))+a.x*sin(angle);
+    tmp.c.z = cos(angle)+qa.z*(1.0-cos(angle));
+    return tmp;
+}
+
+mat3 mat3getRotationFromVector(vec3 axis)
+{
+
+    float d = sqrt(axis.y*axis.y + axis.z*axis.z);
+    print(d);
+
+    mat3 irx; 
+    if(d > 0.0)
+    {
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0, axis.z / d, axis.y / d), vec3(0.0, -axis.y / d,  axis.z / d));
+    } else {
+        // set identity
+        irx = mat3(vec3(1.0,0.0,0.0), vec3(0.0,1.0, 0.0), vec3(0.0,0.0,1.0));
+    }
+
+    mat3 iry = mat3(vec3(d,0.0,axis.x), vec3(0.0,1.0,0.0), vec3(-axis.x,0.0,d));
+
+    print(irx);
+    print(iry);
+    return mat3Mul(irx, iry);
+}
+
+
+mat3 mat3getRotationAlternative(vec3 axis)
+{
+    vec3 normalizedAxis = vec3Normalize(axis);
+
+    float cosX = vec3Dot(normalizedAxis, vec3(1.0,0.0,0.0));
+    float sinX = vec3Length(vec3Cross(normalizedAxis, vec3(1.0,0.0,0.0)));
+
+    mat3 rotationX = mat3(
+                            vec3(cosX, -sinX, 0.0),
+                            vec3(sinX, cosX, 0.0),
+                            vec3(0.0, 0.0, 1.0));
+
+    float cosY = vec3Dot(normalizedAxis, vec3(0.0,1.0,0.0));
+    float sinY = vec3Length(vec3Cross(normalizedAxis, vec3(0.0,1.0,0.0)));
+
+    mat3 rotationY = mat3(
+                            vec3(1.0, 0.0, 0.0),
+                            vec3(0.0,cosX, -sinX),
+                            vec3(0.0,sinX, cosX));
+
+    return mat3Mul(rotationY, rotationX);
+}
 

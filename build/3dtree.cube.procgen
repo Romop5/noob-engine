@@ -1,0 +1,85 @@
+#include "stdlinear.gen"
+
+using block = struct
+{
+    vec3 position;
+    vec3 color;
+    vec3 sz;
+    mat3 rotation;
+};
+
+using metablock = struct
+{
+    block bck;
+    vec3 direction;
+};
+
+int addBranch(vec3 start, metablock parent,float rotation)
+{
+    // get a new vector 
+    vec3 dirAngled = vec3VectorWithAngle(vec3Normalize(parent.direction), 3.14/4.0);
+
+    // rotate new vector around its parent
+    mat3 rot = mat3RotateArbitrary(vec3Normalize(parent.direction), rotation);
+
+    // get normal
+    vec3 normalVector = vec3GetNormal(parent.direction);
+
+    print(normalVector);
+
+    // rotate normal
+    vec3 rotatedNormal = mat3MulVec3(rot, normalVector);
+    print(rotatedNormal);
+
+    // new position = start + normal*offset
+    //start = vec3Add(start, vec3ScalarMul(rotatedNormal, -1.0));
+
+
+    // finally, get direction vector for new branch
+    vec3 branchDirection = mat3MulVec3(rot, dirAngled);
+
+    appendSymbol(metablock(block(start, vec3(1.0,0.0,0.0), parent.bck.sz,mat3getRotationAlternative(branchDirection)), branchDirection));
+
+    print(mat3getRotationAlternative(branchDirection));
+
+    //appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1),getIdentity3()));
+}
+
+using transformRule = rule metablock
+{
+    return true;
+} {
+    appendSymbol(this.bck);
+    
+    this.bck.sz = vec3ScalarMul(this.bck.sz,0.5);
+    // translate branches upwards along the direction
+    vec3 newStart = vec3Add(this.bck.position, vec3ScalarMul(this.direction, this.bck.sz.z*2.0));
+
+    // add branches
+   
+    addBranch(newStart,this,0.0);
+    addBranch(newStart,this,3.14*120.0/180.0);
+    addBranch(newStart,this,3.14*240.0/180.0);
+
+};
+
+int init()
+{
+    //appendSymbol(metablock(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(1.0,1.0,4.0),mat3getRotationAlternative(vec3(0.0,1.0,0.0))), vec3(0.0,1.0,0.0)));
+    //appendSymbol(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(1.0,1.0,1.0),getIdentity3()));
+    /*addBranch(vec3(0.0,2.0,0.0), vec3(0.0,1.0, 0.0), 0.0);
+    addBranch(vec3(0.0,2.0,0.0), vec3(0.0,1.0, 0.0), 3.14*120.0/180.0);
+    addBranch(vec3(0.0,2.0,0.0), vec3(0.0,1.0, 0.0), 3.14*240.0/180.0);
+    */
+
+    //mat3 transform = mat3Mul(rotateZ(3.1415*145.0/180.0),rotateX(3.1415*40.0/180.0));
+
+    vec3 dir = vec3(2.0,0.0,0.0);
+    mat3 transform = mat3getRotationAlternative(vec3(1.0,0.0,1.0));
+    vec3 newPos = mat3MulVec3(transform, dir);
+    print(newPos);
+    appendSymbol(block(newPos, vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1),getIdentity3()));
+    appendSymbol(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(2.1,0.1,0.1),
+                transform));
+    setMaximumIterations(2);
+}

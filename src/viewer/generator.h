@@ -133,9 +133,33 @@ class Generator
                 color[2] = jsonColor["z"].get<double>();
             }
 
+            glm::mat4 rotation = glm::mat4(1.0);
+            if(cube.find("rotation") != cube.end())
+            {
+                // load rotation
+                rotation[0][0] = cube["rotation"]["a"]["x"];
+                rotation[0][1] = cube["rotation"]["a"]["y"];
+                rotation[0][2] = cube["rotation"]["a"]["z"];
+                rotation[0][3] = 0.0;
+
+                rotation[1][0] = cube["rotation"]["b"]["x"];
+                rotation[1][1] = cube["rotation"]["b"]["y"];
+                rotation[1][2] = cube["rotation"]["b"]["z"];
+                rotation[1][3] = 0.0;
+
+                rotation[2][0] = cube["rotation"]["c"]["x"];
+                rotation[2][1] = cube["rotation"]["c"]["y"];
+                rotation[2][2] = cube["rotation"]["c"]["z"];
+                rotation[2][3] = 0.0;
+
+                rotation[3] = glm::vec4(0.0,0.0,0.0,1.0);
+            }
+
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Size: %g\n", size);
-            parent->addChild(this->createModelFromCube(position, glm::vec3(size),color));
+
+            parent->addChild(this->createModelFromCube(position,rotation, glm::vec3(size),color));
+
         }
 
         void processJsonBlock(std::shared_ptr<SceneNode> parent, json block)
@@ -166,17 +190,38 @@ class Generator
                 size[2] = jsonSize["z"].get<double>();
             }
 
+            glm::mat4 rotation = glm::mat4(1.0);
+            if(block.find("rotation") != block.end())
+            {
+                // load rotation
+                rotation[0][0] = block["rotation"]["a"]["x"];
+                rotation[0][1] = block["rotation"]["a"]["y"];
+                rotation[0][2] = block["rotation"]["a"]["z"];
+                rotation[0][3] = 0.0;
+
+                rotation[1][0] = block["rotation"]["b"]["x"];
+                rotation[1][1] = block["rotation"]["b"]["y"];
+                rotation[1][2] = block["rotation"]["b"]["z"];
+                rotation[1][3] = 0.0;
+
+                rotation[2][0] = block["rotation"]["c"]["x"];
+                rotation[2][1] = block["rotation"]["c"]["y"];
+                rotation[2][2] = block["rotation"]["c"]["z"];
+                rotation[2][3] = 0.0;
+
+                rotation[3] = glm::vec4(0.0,0.0,0.0,1.0);
+            }
 
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Read color : %s\n", glm::to_string(color).c_str());
             LOG_DEBUG("Read size: %s\n", glm::to_string(size).c_str());
-            parent->addChild(this->createModelFromCube(position, size,color));
+            parent->addChild(this->createModelFromCube(position,rotation, size,color));
         }
 
 
 
 
-        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, glm::vec3 sz, glm::vec3 color)
+        std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, glm::mat4 rotation, glm::vec3 sz, glm::vec3 color)
         {
             auto model = std::make_shared<SceneVisual>();
             auto mesh = std::make_shared<Primitive>();
@@ -185,7 +230,14 @@ class Generator
             auto transform = std::make_shared<SceneTransform>();
             //glm::mat4 matrix = glm::scale(glm::vec3(sz*0.5))*glm::translate(position);
             //glm::mat4 matrix = glm::scale(sz)*glm::translate(position);
-            glm::mat4 matrix = glm::translate(position)*glm::scale(sz);
+            //
+            
+            LOG_INFO("Rotation : %s\n", glm::to_string(rotation).c_str());
+
+            //rotation = glm::rotate(glm::mat4(1.0f), 30.0f, glm::vec3(1.0f,1.0f,1.0f));
+
+            glm::mat4 matrix = glm::translate(position)*glm::transpose(rotation)*glm::scale(sz);
+            //glm::mat4 matrix = rotation;//*glm::scale(sz);
             transform->setTransformation(matrix);
             transform->addChild(model);
             return transform;
