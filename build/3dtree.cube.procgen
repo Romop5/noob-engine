@@ -32,16 +32,18 @@ int addBranch(vec3 start, metablock parent,float rotation)
     print(rotatedNormal);
 
     // new position = start + normal*offset
-    start = vec3Add(start, vec3ScalarMul(rotatedNormal, 2.0));
+    start = vec3Add(start, vec3ScalarMul(rotatedNormal, parent.bck.sz.x));
 
 
     // finally, get direction vector for new branch
     vec3 branchDirection = mat3MulVec3(rot, dirAngled);
 
+    start = vec3Add(start, vec3ScalarMul(branchDirection, parent.bck.sz.z));
+
     appendSymbol(metablock(block(start, vec3(1.0,0.0,0.0), parent.bck.sz,mat3getRotationFromVector(branchDirection)), branchDirection));
 
 
-    appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1),getIdentity3()));
+    //appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1),getIdentity3()));
 }
 
 using transformRule = rule metablock
@@ -66,5 +68,5 @@ int init()
 {
     appendSymbol(metablock(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(0.1,0.1,2.0),mat3getRotationFromVector(vec3(0.0,1.0,0.0))), vec3(0.0,1.0,0.0)));
 
-    setMaximumIterations(4);
+    setMaximumIterations(7);
 }
