@@ -1,7 +1,9 @@
 #include "stdlinear.gen"
 
-parameter float GROWRATE =  0.5;
-parameter float ANGLE =  90.0;
+parameter float GROWRATE =  0.6;
+parameter float ANGLE =  30.0;
+
+parameter vec3 BRANCHCOLOR;
 
 using block = struct
 {
@@ -44,7 +46,7 @@ int addBranch(vec3 start, metablock parent,float rotation)
 
     start = vec3Add(start, vec3ScalarMul(branchDirection, parent.bck.sz.z));
 
-    appendSymbol(metablock(block(start, vec3(1.0,0.0,0.0), parent.bck.sz,mat3getRotationFromVector(branchDirection)), branchDirection));
+    appendSymbol(metablock(block(start, BRANCHCOLOR, parent.bck.sz,mat3getRotationFromVector(branchDirection)), branchDirection));
 
 
     //appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1),getIdentity3()));
@@ -76,7 +78,8 @@ using transformRule = rule metablock
 
 int init()
 {
-    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(0.2,0.2,2.0),mat3getRotationFromVector(vec3(0.0,1.0,0.0))), vec3(0.0,1.0,0.0)));
+    BRANCHCOLOR = vec3(0.44,0.17,0.0);
+    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), BRANCHCOLOR, vec3(0.2,0.2,2.0),mat3getRotationFromVector(vec3(0.0,1.0,0.0))), vec3(0.0,1.0,0.0)));
 
     setMaximumIterations(6);
 }

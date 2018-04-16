@@ -96,6 +96,13 @@ int main(int argc, char** argv) {
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
+    //Set antialiasing/multisampling 
+    glHint( GL_LINE_SMOOTH_HINT, GL_NICEST ); 
+    glHint( GL_POLYGON_SMOOTH_HINT, GL_NICEST ); 
+    glDisable( GL_LINE_SMOOTH ); 
+    glDisable( GL_POLYGON_SMOOTH ); 
+    glEnable( GL_MULTISAMPLE );
+
     size_t desiredFrameRate = 30;
     std::chrono::duration<double, std::milli> milisecondsPerPass {1000.0/desiredFrameRate};
 
@@ -141,9 +148,9 @@ int main(int argc, char** argv) {
         engine.render();
 
         // Do rotation
-        i++;
-        glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
-        nodeB->setTransformation(rot);
+//        i++;
+  //      glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
+    //    nodeB->setTransformation(rot);
 
         // calculate remaining time
         auto passEnd = std::chrono::high_resolution_clock::now();

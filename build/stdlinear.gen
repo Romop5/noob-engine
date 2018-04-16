@@ -77,22 +77,34 @@ float vec3Dot(vec3 a, vec3 b)
 
 vec3 vec3Cross(vec3 a, vec3 b)
 {
-    return vec3(a.y*b.z-a.z*b.y, a.x*b.z - a.z*b.x, a.x*b.y - a.y*b.x);
+    return vec3(a.y*b.z-a.z*b.y, -a.x*b.z + a.z*b.x, a.x*b.y - a.y*b.x);
 }
 
-
-
-vec3 vec3GetNormal(vec3 direction)
-{
-    vec3 tmpVector = vec3(direction.y, direction.z, direction.x);
-    return vec3Cross(direction, tmpVector);
-}
 
 vec3 vec3Normalize(vec3 a)
 {
     float len = sqrt(a.x*a.x + a.y*a.y + a.z*a.z);
     return vec3ScalarMul(a, 1.0/len);
 }
+
+/*
+vec3 vec3GetNormal(vec3 direction)
+{
+    direction = vec3Normalize(direction);
+    vec3 tmpVector = vec3(direction.y, direction.z, direction.x);
+    return vec3Cross(direction, tmpVector);
+}
+*/
+
+vec3 vec3GetNormal(vec3 direction)
+{
+    direction = vec3Normalize(direction);
+    vec3 tmpVector = vec3(direction.y, direction.z, direction.x);
+    return vec3Cross(direction, tmpVector);
+}
+
+
+
 
 float vec3Length(vec3 a)
 {
@@ -217,7 +229,7 @@ mat3 rotateZ(float angle)
 
 mat3 mat3RotateArbitrary(vec3 a, float angle)
 {
-    vec3 qa = vec3(a.x*a.y, a.y*a.y, a.z*a.z);
+    vec3 qa = vec3(a.x*a.x, a.y*a.y, a.z*a.z);
     mat3 tmp;
     tmp.a.x = cos(angle)+qa.x*(1.0-cos(angle));
     tmp.a.y = a.x*a.y*(1.0-cos(angle)) - a.z*sin(angle);
