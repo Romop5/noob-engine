@@ -1,5 +1,55 @@
 #include "stdlinear.gen"
 
+parameter float PI = 3.1415;
+parameter float lengthOfBrick = 0.3;
+parameter float bricketHeigth= 0.1;
+parameter float bricketGap= 0.001;
+parameter float bricketDisplacement= 0.1;
+
+
+using point = struct
+{
+    float x;
+    float y;
+};
+/*
+ * This function is used to parser points-defined curve in order
+ * to get Y position.
+ * Example: ( (0.0,1.0), (1.0,2.0), (1.5,0.0) 
+ * NOTE: this function assumees that curvePoints are sorted by X
+ * and grow
+ */
+float curveGetY(collection curvePoints, float x)
+{
+    if(curvePoints.size() == 0)
+    {
+        return -1;
+    }
+    
+    // bounded on left by first point
+    point start = convert<point>(curvePoints.at(0)); 
+    int iterator = 0;
+    while(iterator < curvePoints.size())
+    {
+        point current = convert<point>(curvePoints.at(iterator));
+        if(x < current.x)
+        {
+            // linear interpolation
+            float p = (x-start.x)/(current.x-start.x);
+            if(p < 0.0)
+            {
+                p = 0.0;
+            }
+            return p*current.y + (1.0-p)*start.y;
+        } else {
+            start = current;
+        }
+        iterator = iterator + 1;
+    }
+    // bounded on right by the last point
+    return start.y;
+}
+
 using block = struct
 {
     vec3 position;
@@ -7,17 +57,17 @@ using block = struct
     vec3 sz;
     mat3 rotation;
 };
-
-parameter float PI = 3.1415;
-parameter float lengthOfBrick = 0.3;
-parameter float bricketGap= 0.001;
-parameter float bricketHeigth= 0.1;
-parameter float bricketDisplacement= 0.1;
-
 using floor  = struct
 {
     float radius;
     vec3 position;
+};
+
+using floorWindow  = struct
+{
+    float radius;
+    vec3 position;
+    int count;
 };
 
 using floorBuild = rule floor
@@ -40,17 +90,53 @@ using floorBuild = rule floor
         brickPosition = vec3Add(brickPosition, this.position);
         //vec3 brickPosition = vec3(cos(radAnglePassed)*this.radius+this.position.x,this.position.y, sin(radAnglePassed)*this.radius+this.position.z);
 
-        appendSymbol(block(brickPosition, vec3(0.1,0.0,0.0), vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5),rotationCube));
+        appendSymbol(block(brickPosition, vec3ScalarMul(vec3(0.1,0.1,0.1),random()), vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5),rotationCube));
         anglePassed =  anglePassed + anglePerBrick;
     }
 };
 
-float curveGetY(collection curvePoints, float x)
+using floorBuildWindow = rule floorWindow
 {
-    // let's presume points are sorted by X
-    // TODO
-    return 1.0;
-}
+    return true;
+} {
+    float circum = this.radius*2.0*PI;
+    float countOfBricks = circum / (lengthOfBrick + bricketGap);
+
+    float anglePerBrick = 360.0/countOfBricks;
+    print(anglePerBrick);
+
+    float anglePassed = 0.0;
+
+    int iterator = 0;
+    while(anglePassed < 360.0)
+    {
+        // calculate position
+        float radAnglePassed = PI*(anglePassed+(this.position.y/bricketHeigth)*(anglePerBrick*0.5)) / 180.0;
+        mat3 rotationCube = rotateY(radAnglePassed);
+        vec3 brickPosition = mat3MulVec3(rotationCube, vec3(this.radius,0.0,0.0));
+        brickPosition = vec3Add(brickPosition, this.position);
+        //vec3 brickPosition = vec3(cos(radAnglePassed)*this.radius+this.position.x,this.position.y, sin(radAnglePassed)*this.radius+this.position.z);
+
+        int brickLayerCount = 0;
+        while(brickLayerCount < this.count)
+        {
+            float heigthDisplacement = (float)(brickLayerCount)*bricketHeigth;
+            appendSymbol(block(vec3Add(brickPosition,vec3(0.0,heigthDisplacement,0.0)), vec3(0.1,0.1,0.1), vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5),rotationCube));
+            brickLayerCount = brickLayerCount + 1;
+        }
+        anglePassed =  anglePassed + anglePerBrick;
+
+        iterator = iterator + 1;
+        if(iterator > 3)
+        {
+            iterator = 0;
+            anglePassed = anglePassed + anglePerBrick*2.0;
+        }
+        
+    }
+};
+
+
 using tower = struct
 {
     vec3 position;
@@ -69,11 +155,17 @@ using towerBuild = rule tower
         position.y = position.y + bricketHeigth;
         iterator = iterator -1;
         // create floor
-        appendSymbol(floor(this.maximumRadius,  position));
+        appendSymbol(floor(this.maximumRadius*curveGetY(this.curvePoints,position.y),  position));
     }
+    appendSymbol(floorWindow(this.maximumRadius*curveGetY(this.curvePoints,position.y),  position, 4));
+    position.y = position.y + bricketHeigth*4;
 };
 
 int init()
 {
-    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 100, collection()));
+    collection simpleCurve = collection(point(0.0,1.5),point(2.0,1.0),point(5.0,1.0),point(5.2,1.1),point(5.4,1.0), point(8.0,1.0),point(9.0,1.5));
+    //collection simpleCurve = collection(point(0.0,1.5),point(2.0,3.0),point(5.0,1.0),point(5.2,1.1),point(5.4,3.0), point(8.0,4.0),point(9.0,1.5));
+    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 150, simpleCurve));
+    appendSymbol(tower(vec3(4.0,0.0,0.0),1.0, 100, simpleCurve));
+    appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 100, simpleCurve));
 }

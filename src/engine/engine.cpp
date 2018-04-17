@@ -23,6 +23,7 @@ bool Engine::createWindows(float width, float heigth) {
         SDL_CreateWindow("NoobEngine Pro-Alfa-Noob version 666", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                          width, heigth, SDL_WINDOW_OPENGL);
 
+    SDL_SetWindowResizable(this->_window, SDL_TRUE);
     _mainContext = SDL_GL_CreateContext(this->_window);
 
     // init GUI

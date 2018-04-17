@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <libgen.h>
+#include <algorithm>
 
 
 #include <viewer/scriptcontrol.h>
@@ -43,6 +44,13 @@ std::vector<std::string> getFilesInDirectory(std::string path)
     if (errno != 0)
         LOG_ERROR("error reading directory");
     (void) closedir(dirp);
+
+    // filter out all files except those containing "example"
+    files.erase(std::remove_if(files.begin(), files.end(), [](std::string& item){return (item.find("example") == std::string::npos);}),
+                           files.end());
+
+    // sort files
+    std::sort(files.begin(), files.end());
     return files;
 }
 
@@ -143,15 +151,14 @@ int main(int argc, char** argv) {
     auto scriptmachine = std::make_shared<ScriptControl>();
     scriptmachine->init(); 
    
+    bool shouldRotateModel = true;
     auto files = getFilesInDirectory("."); 
     engine.getGUI().registerCallback(
-		    [files,&scriptmachine] {
+		    [files,&scriptmachine,&shouldRotateModel] {
 
                 static bool open = true;
                 ImGui::Begin("Editor", &open, ImGuiWindowFlags_AlwaysAutoResize);
                 ImGui::Text("Choose the script you want to show. ");
-                ImGui::Text("State: %d", scriptmachine->hasJob());
-                ImGui::Separator();
                 for(auto &file: files)
                 {
                     if(file.find(".gen") != std::string::npos)
@@ -161,6 +168,10 @@ int main(int argc, char** argv) {
                         }
                 }
                 
+                ImGui::Separator();
+                ImGui::Checkbox("Rotate model", &shouldRotateModel);
+                //static int iterationCount = 0;
+                //ImGui::SliderInt("Maximum iterations",&iterationCount,0, 100); 
                 ImGui::End();
               
                 if(scriptmachine->hasJob())
@@ -172,6 +183,7 @@ int main(int argc, char** argv) {
                     ImGui::Text("Wait till loading finishes");
                     ImGui::EndPopup();
                 }
+
                 
                 
             }
@@ -185,10 +197,13 @@ int main(int argc, char** argv) {
         // Render
         engine.render();
 
-        // Do rotation
-        i++;
-        glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
-        nodeB->setTransformation(rot);
+        if(shouldRotateModel)
+        {
+            // Do rotation
+            i++;
+            glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
+            nodeB->setTransformation(rot);
+        }
 
         // calculate remaining time
         auto passEnd = std::chrono::high_resolution_clock::now();

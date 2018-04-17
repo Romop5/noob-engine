@@ -105,12 +105,41 @@ class Generator
                 {
                     LOG_DEBUG("Object: %s\n", symbol.dump(1).c_str());
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
+
+                    // Cube is presented as vec3 position, float size and color
                     if(symbol["_type"].get<std::string>() == "cube")
                         processJsonCube(parent, symbol);
 
+                    // Block is generalized cube with is presented as vec3 position, vec3 size and color
                     if(symbol["_type"].get<std::string>() == "block")
                         processJsonBlock(parent, symbol);
+
+                    // Polygon is a set of 3D points and vec3 color, defining a mesh
+                    if(symbol["_type"].get<std::string>() == "polygon")
+                        processPolygon(parent, symbol);
                 }
+        }
+
+        void processPolygon(std::shared_ptr<SceneNode> parent, json polygon)
+        {
+            
+            LOG_INFO("Polygon: %s\n", polygon.dump().c_str());
+            // each polygon has a collection with name 'points'
+            if(polygon.find("points") == polygon.end())
+            {
+                return;
+            }
+
+            std::vector<glm::vec3> points;
+
+            for(auto point: polygon["points"])
+            {
+                points.push_back(glm::vec3(point["x"].get<float>(),point["y"].get<float>(),point["z"].get<float>()));
+            }
+
+            glm::vec3 color = glm::vec3(polygon["color"]["x"].get<float>(),polygon["color"]["y"].get<float>(),polygon["color"]["z"].get<float>());
+
+            parent->addChild(this->createPolygon(points,color));
         }
 
         void processJsonCube(std::shared_ptr<SceneNode> parent, json cube)
@@ -220,6 +249,16 @@ class Generator
 
 
 
+        std::shared_ptr<SceneNode> createPolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
+        {
+            auto model = std::make_shared<SceneVisual>();
+            auto mesh = std::make_shared<Primitive>();
+            mesh->createPolygon(points,color);
+            model->appendMesh(mesh);
+            auto transform = std::make_shared<SceneTransform>();
+            transform->addChild(model);
+            return transform;
+        }
 
         std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, glm::mat4 rotation, glm::vec3 sz, glm::vec3 color)
         {

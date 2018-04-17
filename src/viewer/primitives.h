@@ -5,6 +5,27 @@
 class Primitive: public Mesh
 {
     public:
+        void createPolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
+        {
+            const glm::vec3& start = points[0];
+            glm::vec3 lastOne = points[1];
+            std::vector<Triangle> triangles;
+
+            for(auto it = points.begin()+2; it != points.end(); it++)
+            {
+                triangles.push_back( {
+                    Vertex(start,glm::vec3(color)),
+                     Vertex(lastOne,glm::vec3(color)),
+                     Vertex(*it,glm::vec3(color))
+                });
+                lastOne = *it;
+            }
+            LOG_DEBUG("Adding polygon\n");
+            this->createFromVertices(triangles,
+            VertexAtributes::POSITION | VertexAtributes::COLOR
+            | VertexAtributes::NORMAL);
+        }
+
         void createBox(glm::vec3 color = glm::vec3(0.0))
         {
             LOG_DEBUG("Adding box with color: %s\n", glm::to_string(color).c_str());
