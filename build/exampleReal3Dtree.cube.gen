@@ -1,6 +1,6 @@
 #include "stdtube.procgen"
 
-parameter float GROWRATE =  0.8;
+parameter float GROWRATE =  0.6;
 parameter float ANGLE =  30.0;
 
 parameter vec3 BRANCHCOLOR;
@@ -16,6 +16,7 @@ using metablock = struct
 {
     block bck;
     vec3 direction;
+    int remaining;
 };
 
 int addBranch(vec3 start, metablock parent,float rotation)
@@ -30,13 +31,31 @@ int addBranch(vec3 start, metablock parent,float rotation)
     vec3 branchDirection = mat3MulVec3(rot, dirAngled);
 
 
-    appendSymbol(metablock(block(start, BRANCHCOLOR, parent.bck.sz), branchDirection));
+    appendSymbol(metablock(block(start, BRANCHCOLOR, parent.bck.sz), branchDirection, parent.remaining -1));
     //appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1)));
 }
+using leaf = rule metablock
+{
+    if(this.remaining == 0)
+    {
+        return true;
+    }
+    return false;
+} {
+    vec3 unitVector = vec3Normalize(this.direction);
+    unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
+    vec3 newSize = vec3ScalarMul(this.bck.sz,GROWRATE);
+    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color);
 
+    makeLeaf(unitVector, this.direction, this.bck.sz.z*0.4);
+};
 using transformRule = rule metablock
 {
-    return true;
+    if(this.remaining > 0)
+    {
+        return true;
+    }
+    return false;
 } {
     vec3 unitVector = vec3Normalize(this.direction);
     unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
@@ -58,7 +77,5 @@ using transformRule = rule metablock
 int init()
 {
     BRANCHCOLOR = vec3(0.44,0.17,0.0);
-    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), BRANCHCOLOR, vec3(0.2,0.2,3.0)), vec3(0.0,1.0,0.0)));
-
-    setMaximumIterations(9);
+    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), BRANCHCOLOR, vec3(0.2,0.2,3.0)), vec3(0.0,1.0,0.0),4));
 }

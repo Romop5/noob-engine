@@ -52,11 +52,65 @@ int makeTube(vec3 start, vec3 end, float startRadius, float endRadius,vec3 color
 }
 
 
+int makeLeaf(vec3 start,vec3 wayVector, float sz)
+{
+    vec3 color = vec3(0.0,1.0,0.0);
+    // inspired by
+    mat3 transform = mat3getRotationFromVector(wayVector);
+    //mat3 transform = getIdentity3();
+
+    transform = mat3Mul(transform, mat3Scale(sz));
+
+    collection points;
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.0,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.1,0.0))));
+
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.4,0.3,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.5,0.5,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.4,0.7,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.3,0.8,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,1.0,0.0))));
+
+
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(-0.0,1.0,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(-0.3,0.8,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(-0.4,0.7,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(-0.5,0.5,0.0))));
+    points.insert(vec3Add(start, mat3MulVec3(transform,vec3(-0.4,0.3,0.0))));
+
+    appendSymbol(polygon(color, points));
+
+    collection pointsInversed;
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.0,0.0))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.1,0.0))));
+
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.3,0.4))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.5,0.5))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.7,0.4))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.8,0.3))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,1.0,0.0))));
+
+
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,1.0,-0.0))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.8,-0.3))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.7,-0.4))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.5,-0.5))));
+    pointsInversed.insert(vec3Add(start, mat3MulVec3(transform,vec3(0.0,0.3,-0.4))));
+
+    appendSymbol(polygon(color, pointsInversed));
+
+}
+
+
+
 /*
 int init()
 {
-    makeTube(vec3(0.0,1.0,0.0), vec3(1.0,1.0,0.0), 1.0,0.5,vec3(1.0,0.0,0.0));
+    //makeTube(vec3(0.0,1.0,0.0), vec3(1.0,1.0,0.0), 1.0,0.5,vec3(1.0,0.0,0.0));
     //appendSymbol(polygon( vec3(0.0,1.0,0.0), collection(vec3(0.0,0.0,0.0), vec3(1.0,1.0,0.0), vec3(0.0,1.0,0.0))));
+    makeLeaf(vec3(0.0,0.0,0.0), vec3(0.0,0.0,1.0), 1.0);
+    makeLeaf(vec3(0.0,5.0,0.0), vec3(0.0,0.0,1.0), 0.1);
 }
+
 
 */
