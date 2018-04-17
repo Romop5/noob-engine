@@ -1,0 +1,79 @@
+#include "stdlinear.gen"
+
+using block = struct
+{
+    vec3 position;
+    vec3 color;
+    vec3 sz;
+    mat3 rotation;
+};
+
+parameter float PI = 3.1415;
+parameter float lengthOfBrick = 0.3;
+parameter float bricketGap= 0.001;
+parameter float bricketHeigth= 0.1;
+parameter float bricketDisplacement= 0.1;
+
+using floor  = struct
+{
+    float radius;
+    vec3 position;
+};
+
+using floorBuild = rule floor
+{
+    return true;
+} {
+    float circum = this.radius*2.0*PI;
+    float countOfBricks = circum / (lengthOfBrick + bricketGap);
+
+    float anglePerBrick = 360.0/countOfBricks;
+    print(anglePerBrick);
+
+    float anglePassed = 0.0;
+    while(anglePassed < 360.0)
+    {
+        // calculate position
+        float radAnglePassed = PI*(anglePassed+(this.position.y/bricketHeigth)*(anglePerBrick*0.5)) / 180.0;
+        mat3 rotationCube = rotateY(radAnglePassed);
+        vec3 brickPosition = mat3MulVec3(rotationCube, vec3(this.radius+random()*bricketDisplacement,0.0,0.0));
+        brickPosition = vec3Add(brickPosition, this.position);
+        //vec3 brickPosition = vec3(cos(radAnglePassed)*this.radius+this.position.x,this.position.y, sin(radAnglePassed)*this.radius+this.position.z);
+
+        appendSymbol(block(brickPosition, vec3(0.1,0.0,0.0), vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5),rotationCube));
+        anglePassed =  anglePassed + anglePerBrick;
+    }
+};
+
+float curveGetY(collection curvePoints, float x)
+{
+    // let's presume points are sorted by X
+    // TODO
+    return 1.0;
+}
+using tower = struct
+{
+    vec3 position;
+    float maximumRadius;
+    int numberOfFloors;
+    collection curvePoints;
+};
+
+using towerBuild = rule tower
+{ return true; } { 
+    
+    vec3 position = this.position;
+    int iterator = this.numberOfFloors;
+    while(iterator > 0)
+    {
+        position.y = position.y + bricketHeigth;
+        iterator = iterator -1;
+        // create floor
+        appendSymbol(floor(this.maximumRadius,  position));
+    }
+};
+
+int init()
+{
+    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 100, collection()));
+}
