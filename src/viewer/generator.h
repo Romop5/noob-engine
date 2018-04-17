@@ -21,14 +21,14 @@ class Generator
             return false;
 
         }
-        bool generateCubes(std::shared_ptr<SceneNode> parent)
+        bool generateGeometry(std::shared_ptr<SceneNode> parent)
         {
              if(this->pg.runInit() == false)
                     return false;
 
             this->pg.run(0);
             json result = this->pg.serialize();
-            produceCubesFromJson(parent, result);
+            produceGeometryFromJson(parent, result);
             return true; 
         }
         bool generate()
@@ -43,59 +43,11 @@ class Generator
         bool produceOutput(std::shared_ptr<SceneNode> parent)
         {
             json result = this->pg.serialize();
-            produceCubesFromJson(parent, result);
-            return true; 
-        }
- 
-        bool generate(std::shared_ptr<SceneNode> parent)
-        {
-             if(this->pg.runInit() == false)
-                    return false;
-
-            this->pg.run(0);
-            json result = this->pg.serialize();
             produceGeometryFromJson(parent, result);
             return true; 
         }
-
+ 
         void produceGeometryFromJson(std::shared_ptr<SceneNode> parent, json input)
-        {
-                std::vector<Triangle> geometry;
-        
-                LOG_DEBUG("Result of generation: \n%s\n",input.dump(1).c_str());
-                LOG_DEBUG("Count of objects: %d\n", input.size());
-                for(auto &symbol: input)
-                {
-                    if(symbol["_type"].get<std::string>() == "triangle")
-                    {
-                        auto vertices = symbol["vertices"];
-                        std::vector<Vertex> verticesForTriangle;
-                        for(auto &vertex: vertices)
-                        {
-                            if(vertex["_type"].get<std::string>() == "vertex")
-                            {
-                                auto pos = vertex["position"];
-                                glm::vec3 position;
-                                position = glm::vec3(pos["x"].get<double>(),pos["y"].get<double>(), pos["z"].get<double>());
-                                verticesForTriangle.push_back(Vertex(position));
-                            }
-                        }
-                        geometry.push_back({
-                                verticesForTriangle[0],
-                                verticesForTriangle[1],
-                                verticesForTriangle[2]
-                        });
-                    }
-                }
-                auto mesh = std::make_shared<Mesh>();
-                mesh->createFromVertices(geometry,
-                    VertexAtributes::NORMAL|VertexAtributes::POSITION); 
-                auto model = std::make_shared<SceneVisual>();
-                model->appendMesh(mesh);
-                parent->addChild(model);
-        }
-
-        void produceCubesFromJson(std::shared_ptr<SceneNode> parent, json input)
         {
 
                 LOG_DEBUG("Result of generation: \n%s\n",input.dump(1).c_str());
@@ -140,6 +92,7 @@ class Generator
             glm::vec3 color = glm::vec3(polygon["color"]["x"].get<float>(),polygon["color"]["y"].get<float>(),polygon["color"]["z"].get<float>());
 
             parent->addChild(this->createPolygon(points,color));
+            LOG_INFO("Adding polygon\n");
         }
 
         void processJsonCube(std::shared_ptr<SceneNode> parent, json cube)

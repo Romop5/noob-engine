@@ -15,21 +15,21 @@ int makeTube(vec3 start, vec3 end, float startRadius, float endRadius,vec3 color
     float anglePerPoint = 360.0/numOfPoints;
     float totalAngle = anglePerPoint;
 
-    mat3 rotation = mat3getRotationFromVector(wayVector);
+    mat3 rotation = mat3getRotationFromVector(vec3Normalize(wayVector));
     rotation = mat3Mul(rotation, rotateX(-3.1415*0.5));
 
     vec3 lastPointStart = vec3(startRadius,0.0,0.0);
     vec3 lastPointEnd = vec3(endRadius,length,0.0);
 
     collection upFace;
-    upFace.insert(mat3MulVec3(rotation, lastPointEnd));
+    upFace.insert(vec3Add(start,mat3MulVec3(rotation, lastPointEnd)));
     collection downFace;
-    downFace.insert(mat3MulVec3(rotation, lastPointStart));
+    downFace.insert(vec3Add(start, mat3MulVec3(rotation, lastPointStart)));
     while(totalAngle < 360.1)
     {
         collection points; 
-        points.insert(mat3MulVec3(rotation, lastPointStart));
-        points.insert(mat3MulVec3(rotation, lastPointEnd));
+        points.insert(vec3Add(start, mat3MulVec3(rotation, lastPointStart)));
+        points.insert(vec3Add(start, mat3MulVec3(rotation, lastPointEnd)));
 
         float radianTotalAngle = 3.1415*totalAngle/180.0;
         lastPointStart = vec3(cos(radianTotalAngle)*startRadius, 0.0, sin(radianTotalAngle)*startRadius);
@@ -38,22 +38,25 @@ int makeTube(vec3 start, vec3 end, float startRadius, float endRadius,vec3 color
         lastPointStart = ( lastPointStart);
         lastPointEnd =  (lastPointEnd);
 
-        points.insert(mat3MulVec3(rotation, lastPointEnd));
-        points.insert(mat3MulVec3(rotation, lastPointStart));
-        appendSymbol(polygon(vec3(1.0,0.0,0.0), points));
+        points.insert(vec3Add(start, mat3MulVec3(rotation, lastPointEnd)));
+        points.insert(vec3Add(start, mat3MulVec3(rotation, lastPointStart)));
+        appendSymbol(polygon(color, points));
         totalAngle = totalAngle + anglePerPoint;
 
-        upFace.insert(mat3MulVec3(rotation, lastPointEnd));
-        downFace.insert(mat3MulVec3(rotation, lastPointStart));
+        upFace.insert(vec3Add(start, mat3MulVec3(rotation, lastPointEnd)));
+        downFace.insert(vec3Add(start, mat3MulVec3(rotation, lastPointStart)));
 
     }
-    appendSymbol(polygon(vec3(1.0,0.0,0.0), upFace));
-    appendSymbol(polygon(vec3(1.0,1.0,0.0), downFace));
+    appendSymbol(polygon(color, upFace));
+    appendSymbol(polygon(color, downFace));
 }
 
 
+/*
 int init()
 {
-    makeTube(vec3(0.0,0.0,0.0), vec3(0.0,1.0,0.0), 1.0,0.5,vec3(1.0,0.0,0.0));
+    makeTube(vec3(0.0,1.0,0.0), vec3(1.0,1.0,0.0), 1.0,0.5,vec3(1.0,0.0,0.0));
+    //appendSymbol(polygon( vec3(0.0,1.0,0.0), collection(vec3(0.0,0.0,0.0), vec3(1.0,1.0,0.0), vec3(0.0,1.0,0.0))));
 }
 
+*/

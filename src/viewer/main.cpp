@@ -122,12 +122,7 @@ int main(int argc, char** argv) {
         if(gen.compile(name.c_str()))
         {
             bool generationResult = false;
-            if(name.find("cube") != std::string::npos)
-            {
-                generationResult = gen.generateCubes(objects);
-            } else {
-                generationResult = gen.generate(objects);
-            }
+            generationResult = gen.generateGeometry(objects);
             if(generationResult == false)
                 LOG_ERROR("Generation failed\n");
         } else {
