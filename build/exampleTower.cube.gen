@@ -7,6 +7,12 @@ parameter float bricketGap= 0.001;
 parameter float bricketDisplacement= 0.1;
 
 
+using polygon = struct
+{
+    vec3 color;
+    collection points;
+};
+
 using point = struct
 {
     float x;
@@ -145,6 +151,28 @@ using tower = struct
     collection curvePoints;
 };
 
+
+int buildRoof(vec3 startPosition, float radius)
+{
+    collection points;
+    points.insert(vec3Add(startPosition, vec3(0.0,3.0,0.0)));
+
+    float anglePerPoint = 5.0;
+    
+    float totalAngle = 0.0;
+    while(totalAngle < 360.0)
+    {
+        float radianAngle = PI*totalAngle/180.0;
+
+        points.insert(vec3Add(vec3(cos(radianAngle)*radius, 0.0, sin(radianAngle)*radius), startPosition));
+        totalAngle = totalAngle + anglePerPoint;
+    }
+    // end of circle
+    points.insert(vec3Add(vec3(radius, 0.0, 0.0), startPosition));
+    // append polygon
+    appendSymbol(polygon(vec3(0.1,0.1,0.1), points));
+}
+
 using towerBuild = rule tower
 { return true; } { 
     
@@ -157,8 +185,9 @@ using towerBuild = rule tower
         // create floor
         appendSymbol(floor(this.maximumRadius*curveGetY(this.curvePoints,position.y),  position));
     }
-    appendSymbol(floorWindow(this.maximumRadius*curveGetY(this.curvePoints,position.y),  position, 4));
-    position.y = position.y + bricketHeigth*4;
+    position.y = position.y + bricketHeigth*0.5;
+    //appendSymbol(floorWindow(this.maximumRadius*curveGetY(this.curvePoints,position.y),  position, 4));
+    buildRoof(position, curveGetY(this.curvePoints, position.y));
 };
 
 int init()
