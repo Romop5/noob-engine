@@ -36,6 +36,7 @@ int init()
 {
     appendSymbol(croot(cvec3(0.0,0.0,0.0),cvec3(0.0,1.0,0.0),1.0));
  //   setMaximumIterations(5);
+    setRandomSeed(50.0);
 }
 
 //-------------------------------------
@@ -105,7 +106,7 @@ using leafExpansionSides = rule leaf
 } {
     appendSymbol(ccube(this.node.position, cvec3(0.13,0.54,0.13), this.node.radius));
 
-    float result = int(random() * 3.0);
+    float result = (int)(random() * 3.0);
 
     this.node.direction = vec3ScalarMul(this.node.direction, 2.0*this.node.radius);
     if(result == 0)

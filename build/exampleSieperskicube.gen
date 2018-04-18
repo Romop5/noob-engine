@@ -3,7 +3,7 @@
 int init()
 {
     appendSymbol(cblock(cvec3(0.0,0.0,0.0), cvec3(0.0,0.3,0.0),cvec3(1.0,1.0,1.0)));
-    setMaximumIterations(4);
+    setMaximumIterations(3);
 }
 
 using cubeStep = rule block

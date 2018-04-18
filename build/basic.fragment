@@ -24,7 +24,7 @@ void main()
         overallLightness += abs(amount);
     }
 
-    vec3 realColor = fragmentColor+ambientIntensity+(overallLightness)*0.5;
+    vec3 realColor = fragmentColor+ambientIntensity+(overallLightness)*0.3;
     //color = vec4(vec3(1.0)-realColor,1.0);
 
     color = vec4(realColor,1.0);
