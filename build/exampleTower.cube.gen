@@ -190,11 +190,64 @@ using towerBuild = rule tower
     buildRoof(position, curveGetY(this.curvePoints, position.y));
 };
 
+
+using towerWall = struct {
+    vec3 start;
+    vec3 end;
+    float heigth;
+    float width;
+};
+
+
+using buildWallRule = rule towerWall {
+    return true;
+} {
+
+    float length = vec3Length(vec3Add(this.end, vec3ScalarMul(this.start, -1.0))); 
+    vec3 forwardVector = vec3Normalize((vec3Add(this.end, vec3ScalarMul(this.start, -1.0)))); 
+    vec3 sideVector = vec3Cross(vec3(0.0,1.0,0.0), forwardVector);
+    
+    float currentHeight = 0.0;
+    while(currentHeight < this.heigth)
+    {
+        float p = 0.0;
+        // lay one layer of bricks
+        while(p < length)
+        {
+            vec3 brickColor = vec3ScalarMul(vec3(0.1,0.1,0.1),random());
+
+            vec3 newPos = vec3Add(this.start, vec3ScalarMul(forwardVector, p));
+            newPos = vec3Add(newPos, vec3ScalarMul(vec3(0.0,1.0,0.0), currentHeight));
+            newPos = vec3Add(newPos, vec3ScalarMul(sideVector, uniform(-1.0, 1.0)*bricketDisplacement*0.1));
+
+            // create two sides
+            
+            vec3 sideA = vec3Add(newPos, vec3ScalarMul(sideVector, this.width*0.5));
+            appendSymbol(block(sideA, brickColor, vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5), mat3getRotationFromVector(forwardVector)));
+
+            vec3 sideB = vec3Add(newPos, vec3ScalarMul(sideVector, this.width*(-0.5)));
+            appendSymbol(block(sideB, brickColor, vec3(0.05,bricketHeigth*0.5,lengthOfBrick*0.5), mat3getRotationFromVector(forwardVector)));
+            p = p + lengthOfBrick+bricketGap; 
+        }
+        currentHeight = currentHeight + bricketHeigth; 
+    }
+      
+};
+
 int init()
 {
     collection simpleCurve = collection(point(0.0,1.5),point(2.0,1.0),point(5.0,1.0),point(5.2,1.1),point(5.4,1.0), point(8.0,1.0),point(9.0,1.5));
     //collection simpleCurve = collection(point(0.0,1.5),point(2.0,3.0),point(5.0,1.0),point(5.2,1.1),point(5.4,3.0), point(8.0,4.0),point(9.0,1.5));
     appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 150, simpleCurve));
-    appendSymbol(tower(vec3(4.0,0.0,0.0),1.0, 100, simpleCurve));
-    appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 100, simpleCurve));
+    //appendSymbol(tower(vec3(4.0,0.0,0.0),1.0, 100, simpleCurve));
+    //appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 100, simpleCurve));
+    //
+    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 150, simpleCurve));
+    appendSymbol(tower(vec3(20.0,0.0,0.0),1.0, 150, simpleCurve));
+    appendSymbol(tower(vec3(20.0,0.0,20.0),1.0, 150, simpleCurve));
+    appendSymbol(tower(vec3(0.0,0.0,20.0),1.0, 150, simpleCurve));
+    appendSymbol(towerWall(vec3(0.0,0.0,0.0), vec3(20.0,0.0,0.0), 6.0, 2.0));
+    appendSymbol(towerWall(vec3(0.0,0.0,0.0), vec3(0.0,0.0,20.0), 6.0, 2.0));
+    appendSymbol(towerWall(vec3(0.0,0.0,20.0), vec3(20.0,0.0,20.0), 6.0, 2.0));
+    appendSymbol(towerWall(vec3(20.0,0.0,20.0), vec3(20.0,0.0,0.0), 6.0, 2.0));
 }
