@@ -1,3 +1,4 @@
+#include "stdcubes.gen"
 using floor = struct {
 	collection positions;
 };
@@ -12,6 +13,6 @@ floor cfloor(collection positions)
 int init()
 {
 	collection positions;
-	positions.append(cvec3(0.0,1.0,0.0));
+	positions.insert(cvec3(0.0,1.0,0.0));
 	appendSymbol(cfloor(positions));
 }

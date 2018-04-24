@@ -2,7 +2,7 @@
 
 int init()
 {
-    appendSymbol(cblock(cvec3(0.0,0.0,0.0), cvec3(0.0,0.3,0.0),cvec3(1.0,1.0,1.0)));
+    appendSymbol(block(vec3(0.0,0.0,0.0), vec3(0.0,0.3,0.0),vec3(1.0,1.0,1.0)));
     setMaximumIterations(3);
 }
 
@@ -21,26 +21,26 @@ using cubeStep = rule block
     // Put it into mesh
     
     // Middle
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,0.0,1.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,0.0,1.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,0.0,-1.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,0.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(1.0,0.0,1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(-1.0,0.0,1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(1.0,0.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(-1.0,0.0,-1.0))), this.color, newSizeVec));
 
 
     // top
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,1.0,0.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,1.0,0.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,1.0,-1.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,1.0,1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(1.0,1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(-1.0,1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(0.0,1.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(0.0,1.0,1.0))), this.color, newSizeVec));
 
 
     // bottom
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(1.0,-1.0,0.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(-1.0,-1.0,0.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,-1.0,-1.0))), this.color, newSizeVec));
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,-1.0,1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(1.0,-1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(-1.0,-1.0,0.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(0.0,-1.0,-1.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(0.0,-1.0,1.0))), this.color, newSizeVec));
 
     
     //center
-    appendSymbol(cblock(vec3Add(this.position,vec3Mul(newOffset, cvec3(0.0,0.0,0.0))), this.color, newSizeVec));
+    appendSymbol(block(vec3Add(this.position,vec3Mul(newOffset, vec3(0.0,0.0,0.0))), this.color, newSizeVec));
 };
