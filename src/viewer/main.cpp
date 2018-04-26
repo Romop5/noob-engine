@@ -25,10 +25,9 @@ int main(int argc, char** argv) {
     size_t height = 800;
 
     LOG_INFO("Starting viewer\n");
-    auto tree = std::make_shared<SceneNode>();
 
     auto cameraNode = std::make_shared<SceneCamera>();
-    tree->addChild(cameraNode);
+    cameraNode->resize(width, height);
 
     auto nodeB = std::make_shared<SceneTransform>();
     cameraNode->addChild(nodeB);
@@ -36,20 +35,20 @@ int main(int argc, char** argv) {
 
     nodeB->setTransformation(glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,10.0)));
 
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
+    //glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
   
     glm::mat4 viewMatrix = glm::lookAt(
         glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
 
     cameraNode->setViewTransform(viewMatrix);
-    cameraNode->setPerspectiveTransform(projection);
+    cameraNode->setPerspectiveTransform(45.0);
 
 
     /*
      * Create model
      */
     Engine engine;
-    engine.setScene(tree);
+    engine.setScene(cameraNode);
     engine.createWindows(width, height);
 
     LOG_INFO("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));

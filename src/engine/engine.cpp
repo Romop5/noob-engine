@@ -35,7 +35,16 @@ bool Engine::createWindows(float width, float heigth) {
     glewInit();
 #endif
 }
-void Engine::resizeWindows(float width, float heigth) {}
+void Engine::resizeWindows(float width, float heigth) 
+{
+    if(this->getScene() != nullptr)
+    {
+        LOG_INFO("Resize %fx%f\n", width, heigth);
+        auto cameraNode = std::dynamic_pointer_cast<SceneCamera>(this->getScene());
+        cameraNode->resize(width, heigth);
+        glViewport(0.0,0.0,width, heigth);
+    }
+}
 void Engine::setWindowsVisible(bool status) {
     if (status)
         SDL_ShowWindow(this->_window);
@@ -77,10 +86,21 @@ void Engine::render() {
 void Engine::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
+        LOG_INFO("Fucking messeage\n");
         switch (event.type) {
-        case SDL_QUIT: {
-            this->_isRunning = false;
-        } break;
+            case SDL_QUIT: {
+                this->_isRunning = false;
+            } break;
+            case SDL_WINDOWEVENT: 
+            {
+                switch(event.window.event)
+                {
+                    case SDL_WINDOWEVENT_RESIZED:
+                    case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        this->resizeWindows(event.window.data1, event.window.data2);
+                    } break;
+                }
+            }
         }
         if(this->_messageCallback != nullptr)
             this->_messageCallback(event);
