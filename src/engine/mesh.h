@@ -15,6 +15,15 @@ enum VertexAtributes { POSITION = 1, UV=2, COLOR=4, NORMAL=8};
         }
 
 
+#define COPY_ATTRIBUTE(attr, length, structMember)\
+        if(flags & VertexAtributes::attr)\
+        {\
+            for(int i = 0; i < length; i++)\
+                structMember[i] = raw[offset+i];\
+            offset += length;\
+        }
+
+
 struct Vertex
 {
     glm::vec3 _position;
@@ -25,6 +34,16 @@ struct Vertex
     Vertex(glm::vec3 pos,glm::vec3 color): _position(pos), _color(color) {} 
     //Returns bytes copied
     size_t copyToRawArray(float* raw, size_t flags)
+    {
+        size_t offset = 0;
+        COPY_ATTRIBUTE(POSITION,3, _position);
+        COPY_ATTRIBUTE(UV,2, _uvCoordinates);
+        COPY_ATTRIBUTE(COLOR,3, _color);
+        COPY_ATTRIBUTE(NORMAL,3, _normal);
+        return offset;
+    }
+
+    size_t readFromRawArray(float* raw,size_t flags)
     {
         size_t offset = 0;
         COPY_ATTRIBUTE(POSITION,3, _position);
@@ -126,6 +145,29 @@ class Mesh {
         glBindVertexArray(0);
         this->verticesCount = polygons.size()*3;
     }
+
+    void createVerticesFromRaw(std::vector<Triangle>& polygons,size_t flags) {
+        size_t vertexSize = this->getSizeOfVertex(flags);
+        size_t size =  vertexSize *3* polygons.size();
+
+        auto rawArray = new float[size];
+        size_t offset = 0;
+        glBindVertexArray(vao);
+        float *data = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+
+        for (size_t i = 0; i < this->verticesCount/3; i++) {
+            for(size_t v= 0; v< 3; v++)
+            {
+                Triangle triangle = {Vertex(glm::vec3(0.0,0.0,0.0)), Vertex(glm::vec3(0.0,0.0,0.0)), Vertex(glm::vec3(0.0,0.0,0.0))};
+                offset += triangle.vertices[v].readFromRawArray(&rawArray[offset],flags);
+                polygons.push_back(triangle);
+            }
+        }
+        
+        glUnmapBuffer(GL_ARRAY_BUFFER);
+        glBindVertexArray(0);
+    }
+
 
     GLuint getVertexBufferObjectId() const { return this->vbo; }
     GLuint getVertexArrayObjectId() const { return this->vao; }
