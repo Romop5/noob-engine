@@ -86,7 +86,6 @@ void Engine::render() {
 void Engine::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        LOG_INFO("Fucking messeage\n");
         switch (event.type) {
             case SDL_QUIT: {
                 this->_isRunning = false;

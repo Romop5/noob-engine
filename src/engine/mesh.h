@@ -15,7 +15,7 @@ enum VertexAtributes { POSITION = 1, UV=2, COLOR=4, NORMAL=8};
         }
 
 
-#define COPY_ATTRIBUTE(attr, length, structMember)\
+#define GET_ATTRIBUTE(attr, length, structMember)\
         if(flags & VertexAtributes::attr)\
         {\
             for(int i = 0; i < length; i++)\
@@ -46,10 +46,10 @@ struct Vertex
     size_t readFromRawArray(float* raw,size_t flags)
     {
         size_t offset = 0;
-        COPY_ATTRIBUTE(POSITION,3, _position);
-        COPY_ATTRIBUTE(UV,2, _uvCoordinates);
-        COPY_ATTRIBUTE(COLOR,3, _color);
-        COPY_ATTRIBUTE(NORMAL,3, _normal);
+        GET_ATTRIBUTE(POSITION,3, _position);
+        GET_ATTRIBUTE(UV,2, _uvCoordinates);
+        GET_ATTRIBUTE(COLOR,3, _color);
+        GET_ATTRIBUTE(NORMAL,3, _normal);
         return offset;
     }
 };
