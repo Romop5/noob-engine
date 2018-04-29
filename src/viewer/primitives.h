@@ -5,7 +5,8 @@
 class Primitive: public Mesh
 {
     public:
-        void createPolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
+
+        static std::vector<Triangle> generatePolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
         {
             const glm::vec3& start = points[0];
             glm::vec3 lastOne = points[1];
@@ -20,13 +21,22 @@ class Primitive: public Mesh
                 });
                 lastOne = *it;
             }
+            return triangles;
+        }
+
+
+
+        void createPolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
+        {
+            auto polygons = this->generatePolygon(points,color);
+
             LOG_DEBUG("Adding polygon\n");
-            this->createFromVertices(triangles,
+            this->createFromVertices(polygons,
             VertexAtributes::POSITION | VertexAtributes::COLOR
             | VertexAtributes::NORMAL);
         }
-
-        void createBox(glm::vec3 color = glm::vec3(0.0))
+         
+        static std::vector<Triangle> generateBox(glm::vec3 color = glm::vec3(0.0))
         {
             LOG_DEBUG("Adding box with color: %s\n", glm::to_string(color).c_str());
             std::vector<Triangle> triangles;
@@ -102,9 +112,14 @@ class Primitive: public Mesh
                  Vertex(glm::vec3(-1.0f, 1.0f, 1.0f),glm::vec3(color))
             });
 
+            return triangles;
+         }
 
 
-            this->createFromVertices(triangles,
+        void createBox(glm::vec3 color = glm::vec3(0.0))
+        {
+            auto box = this->generateBox(color);
+               this->createFromVertices(box,
                 VertexAtributes::POSITION | VertexAtributes::COLOR
                 | VertexAtributes::NORMAL);
                 //VertexAtributes::POSITION );
