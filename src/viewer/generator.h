@@ -7,6 +7,8 @@ class Generator
 {
 
     ProcGen::Generation pg;
+
+    std::vector<Triangle> triangles;
     public:
         bool compile(std::string filePath)
         {
@@ -21,16 +23,7 @@ class Generator
             return false;
 
         }
-        bool generateGeometry(std::shared_ptr<SceneNode> parent)
-        {
-             if(this->pg.runInit() == false)
-                    return false;
 
-            this->pg.run(0);
-            json result = this->pg.serialize();
-            produceGeometryFromJson(parent, result);
-            return true; 
-        }
         bool generate()
         {
              if(this->pg.runInit() == false)
@@ -46,6 +39,14 @@ class Generator
             produceGeometryFromJson(parent, result);
             return true; 
         }
+        bool generateGeometry(std::shared_ptr<SceneNode> parent)
+        {
+            if(this->generate() == false)
+                return false;
+        
+            return produceOutput(parent);    
+        }
+
  
         void produceGeometryFromJson(std::shared_ptr<SceneNode> parent, json input)
         {

@@ -124,5 +124,16 @@ class Primitive: public Mesh
                 | VertexAtributes::NORMAL);
                 //VertexAtributes::POSITION );
          }
+
+        static void transformTriangles(const glm::mat4& transformation, const std::vector<Triangle>& triangles)
+        {
+            for(auto& triangle: triangles)
+            {
+                for(auto& vertex: triangle.vertices)                
+                {
+                    vertex._position = glm::vec3(transformation*glm::vec4(vertex._position, 1.0);
+                }
+            }
+        }
 };
 #endif
