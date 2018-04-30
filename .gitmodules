@@ -1,3 +1,12 @@
 [submodule "vendors/procgen"]
 	path = vendors/procgen
 	url = https://github.com/Romop5/procgen
+[submodule "imgui"]
+	path = imgui
+	url = https://github.com/ocornut/imgui
+[submodule "vendors/--force"]
+	path = vendors/--force
+	url = https://github.com/ocornut/imgui
+[submodule "vendors/imgui"]
+	path = vendors/imgui
+	url = https://github.com/ocornut/imgui
