@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
                 ImGui::Text("Choose the script you want to show. ");
                 for(auto &file: files)
                 {
-                    if(file.find(".gen") != std::string::npos)
+                    if(file.find("gen") != std::string::npos)
                         if(ImGui::Selectable(file.c_str()))
                         {
                           scriptmachine->addScript(file, iterationCount);
