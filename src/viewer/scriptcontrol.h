@@ -10,8 +10,12 @@ class ScriptControl
     std::vector<std::string> inputScripts;
     std::vector<std::shared_ptr<Generator>>   outputResults;
 
+    size_t iterationCount;
     bool shouldTerminate;
     bool _hasJob;
+
+    // path to last script used
+    std::string lastScriptName;
     public:
     ScriptControl()
     {
@@ -25,12 +29,15 @@ class ScriptControl
         jobMutex.unlock();
         this->slave.join();
     }
-    void addScript(std::string name)
+    void addScript(std::string name, size_t iterationCount = 1)
     {
         this->jobMutex.lock();
         this->inputScripts.push_back(name);
+        this->lastScriptName = name;
+        this->iterationCount = iterationCount;
         this->jobMutex.unlock();
     }
+    const std::string& getLastScriptName() const { return this->lastScriptName; }
     void init()
     {
         slave = std::thread([this]() {
@@ -61,6 +68,8 @@ class ScriptControl
                     auto gen = std::make_shared<Generator>();
                     if(gen->compile(scriptName.c_str()))
                     {
+                        // set iteration uniform
+                        gen->getLibrary().setUniform("iterations", (int) this->iterationCount);
                         bool generationResult = false;
                         if(gen->generate() != false)
                         {

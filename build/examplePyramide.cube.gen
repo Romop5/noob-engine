@@ -3,10 +3,12 @@
 //
 #include "stdcubes.gen"
 
+parameter int iterations = 1;
+
 int init()
 {
     appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0.0,0.0,0.0),5.0));
-    setMaximumIterations(4);
+    setMaximumIterations(iterations);
 }
 
 int doIt(cube this)

@@ -5,6 +5,8 @@ parameter float ANGLE =  30.0;
 
 parameter vec3 BRANCHCOLOR;
 
+parameter int iterations = 1;
+
 using block = struct
 {
     vec3 position;
@@ -45,7 +47,7 @@ using leaf = rule metablock
     vec3 unitVector = vec3Normalize(this.direction);
     unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
     vec3 newSize = vec3ScalarMul(this.bck.sz,GROWRATE);
-    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color);
+    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color,5.0);
 
     makeLeaf(unitVector, this.direction, this.bck.sz.z*0.4);
 };
@@ -61,7 +63,7 @@ using transformRule = rule metablock
     unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
 
     vec3 newSize = vec3ScalarMul(this.bck.sz,GROWRATE);
-    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color);
+    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color,5.0);
     
     vec3 newStart = unitVector;
 
@@ -77,5 +79,5 @@ using transformRule = rule metablock
 int init()
 {
     BRANCHCOLOR = vec3(0.44,0.17,0.0);
-    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), BRANCHCOLOR, vec3(0.2,0.2,3.0)), vec3(0.0,1.0,0.0),4));
+    appendSymbol(metablock(block(vec3(0.0,0.0,0.0), BRANCHCOLOR, vec3(0.2,0.2,3.0)), vec3(0.0,1.0,0.0),iterations));
 }

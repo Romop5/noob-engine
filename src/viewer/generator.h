@@ -6,12 +6,16 @@
 class Generator
 {
 
-    ProcGen::Generation pg;
+    ProcGen::Procgen pg;
 
     std::vector<Triangle> triangles;
+
+    bool shouldMergeTriangles;
     public:
+        ProcGen::Procgen& getLibrary() { return this->pg;}
         bool compile(std::string filePath)
         {
+            shouldMergeTriangles = true;
             //pg.setDebugOn(false);
 
             if(this->pg.parseFile(filePath) == false)
@@ -35,8 +39,17 @@ class Generator
 
         bool produceOutput(std::shared_ptr<SceneNode> parent)
         {
-            json result = this->pg.serialize();
-            produceGeometryFromJson(parent, result);
+            produceGeometryFromJson(parent, this->pg);
+
+            if(shouldMergeTriangles)
+            {
+                auto mesh = std::make_shared<Mesh>();
+                mesh->createFromVertices(triangles,VertexAtributes::POSITION | VertexAtributes::COLOR
+                | VertexAtributes::NORMAL);
+                auto visual = std::make_shared<SceneVisual>();
+                visual->appendMesh(mesh);
+                parent->addChild(visual);
+            }
             return true; 
         }
         bool generateGeometry(std::shared_ptr<SceneNode> parent)
@@ -48,14 +61,16 @@ class Generator
         }
 
  
-        void produceGeometryFromJson(std::shared_ptr<SceneNode> parent, json input)
+        void produceGeometryFromJson(std::shared_ptr<SceneNode> parent, ProcGen::Procgen& procgen)
         {
 
-                LOG_DEBUG("Result of generation: \n%s\n",input.dump(1).c_str());
+               // LOG_DEBUG("Result of generation: \n%s\n",input.dump(1).c_str());
 
-                LOG_DEBUG("Count of objects: %d\n", input.size());
-                for(auto &symbol: input)
+              //  LOG_DEBUG("Count of objects: %d\n", input.size());
+              size_t countOfObjects = procgen.countOfSymbols();
+              for(size_t i = 0; i < countOfObjects; i++)
                 {
+                    json symbol = procgen.at(i);
                     LOG_DEBUG("Object: %s\n", symbol.dump(1).c_str());
                     LOG_DEBUG("Type of symbol: %s\n",symbol["_type"].get<std::string>().c_str());
 
@@ -141,8 +156,15 @@ class Generator
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Size: %g\n", size);
 
-            parent->addChild(this->createModelFromCube(position,rotation, glm::vec3(size),color));
 
+            if(this->shouldMergeTriangles)
+            {
+                auto anotherTriangles= this->createModelFromCubeVector(position, rotation,glm::vec3(size),color);
+                this->triangles.insert(this->triangles.end(), anotherTriangles.begin(), anotherTriangles.end());
+
+            } else {
+                parent->addChild(this->createModelFromCube(position,rotation, glm::vec3(size),color));
+            }
         }
 
         void processJsonBlock(std::shared_ptr<SceneNode> parent, json block)
@@ -198,9 +220,15 @@ class Generator
             LOG_DEBUG("Read position: %s\n", glm::to_string(position).c_str());
             LOG_DEBUG("Read color : %s\n", glm::to_string(color).c_str());
             LOG_DEBUG("Read size: %s\n", glm::to_string(size).c_str());
-            parent->addChild(this->createModelFromCube(position,rotation, size,color));
-        }
 
+            if(this->shouldMergeTriangles)
+            {
+                auto anotherTriangles = this->createModelFromCubeVector(position,rotation, size,color);
+                this->triangles.insert(this->triangles.end(), anotherTriangles.begin(), anotherTriangles.end());
+            } else {
+                parent->addChild(this->createModelFromCube(position,rotation, size,color));
+            }
+        }
 
 
         std::shared_ptr<SceneNode> createPolygon(const std::vector<glm::vec3>& points, const glm::vec3& color)
@@ -213,6 +241,20 @@ class Generator
             transform->addChild(model);
             return transform;
         }
+
+        std::vector<Triangle> createPolygonVector(const std::vector<glm::vec3>& points, const glm::vec3& color)
+        {
+            return Primitive::generatePolygon(points,color);
+        }
+        std::vector<Triangle> createModelFromCubeVector(glm::vec3 position, glm::mat4 rotation, glm::vec3 sz, glm::vec3 color)
+        {
+            auto triangles = Primitive::generateBox(color);
+            glm::mat4 matrix = glm::translate(position)*glm::transpose(rotation)*glm::scale(sz);
+
+            Primitive::transformTriangles(matrix, triangles);
+            return triangles;
+        }
+
 
         std::shared_ptr<SceneNode> createModelFromCube(glm::vec3 position, glm::mat4 rotation, glm::vec3 sz, glm::vec3 color)
         {

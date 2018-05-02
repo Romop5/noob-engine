@@ -154,6 +154,7 @@ int main(int argc, char** argv) {
     engine.getGUI().registerCallback(
 		    [files,&scriptmachine,&shouldRotateModel] {
 
+                static int iterationCount = 0;
                 static bool open = true;
                 ImGui::Begin("Editor", &open, ImGuiWindowFlags_AlwaysAutoResize);
                 ImGui::Text("Choose the script you want to show. ");
@@ -162,14 +163,20 @@ int main(int argc, char** argv) {
                     if(file.find(".gen") != std::string::npos)
                         if(ImGui::Selectable(file.c_str()))
                         {
-                          scriptmachine->addScript(file);
+                          scriptmachine->addScript(file, iterationCount);
                         }
                 }
                 
                 ImGui::Separator();
                 ImGui::Checkbox("Rotate model", &shouldRotateModel);
-                //static int iterationCount = 0;
-                //ImGui::SliderInt("Maximum iterations",&iterationCount,0, 100); 
+                ImGui::SliderInt("Maximum iterations",&iterationCount,1, 8); 
+                
+                if(ImGui::Button("Generate"))
+                {
+                    scriptmachine->addScript(scriptmachine->getLastScriptName(), iterationCount);
+                }
+
+
                 ImGui::End();
               
                 if(scriptmachine->hasJob())
@@ -181,7 +188,6 @@ int main(int argc, char** argv) {
                     ImGui::Text("Wait till loading finishes");
                     ImGui::EndPopup();
                 }
-
                 
                 
             }

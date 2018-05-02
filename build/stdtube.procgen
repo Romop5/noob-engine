@@ -6,12 +6,12 @@ using polygon = struct
     collection points;
 };
 
-int makeTube(vec3 start, vec3 end, float startRadius, float endRadius,vec3 color)
+int makeTube(vec3 start, vec3 end, float startRadius, float endRadius,vec3 color,float numberOfPoints)
 {
     vec3 wayVector = vec3Add(end,vec3ScalarMul(start,-1.0));
     float length = vec3Length(wayVector);
 
-    float numOfPoints = 20.0;
+    float numOfPoints = numberOfPoints;
     float anglePerPoint = 360.0/numOfPoints;
     float totalAngle = anglePerPoint;
 
