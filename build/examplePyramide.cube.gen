@@ -4,10 +4,12 @@
 #include "stdcubes.gen"
 
 parameter int iterations = 1;
+parameter float stochasticity = 0.5;
+
 
 int init()
 {
-    appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0.0,0.0,0.0),5.0));
+    appendSymbol(ccube(cvec3(0.0,0.0,0.0),cvec3(0.5,0.0,0.0),5.0));
     setMaximumIterations(iterations);
 }
 
@@ -15,13 +17,19 @@ int doIt(cube this)
 {
     float newSize = this.sz/2.0;
     float cubeSize= this.sz/2.0;
-    appendSymbol(ccube(cvec3(this.position.x-newSize,this.position.y-newSize,this.position.z-newSize) ,this.color,cubeSize));
 
-    appendSymbol(ccube(cvec3(this.position.x+newSize,this.position.y-newSize,this.position.z-newSize) ,this.color, cubeSize));
+    vec3 newColor = this.color;
+    newColor.x = newColor.x * (1.0-stochasticity) + uniform(-stochasticity, stochasticity)*stochasticity; 
+    newColor.y = newColor.x * (1.0-stochasticity) + uniform(-stochasticity, stochasticity)*stochasticity; 
+    newColor.z = newColor.x * (1.0-stochasticity) + uniform(-stochasticity, stochasticity)*stochasticity; 
 
-    appendSymbol(ccube(cvec3(this.position.x,this.position.y-newSize,this.position.z+newSize) ,this.color, cubeSize));
+    appendSymbol(ccube(cvec3(this.position.x-newSize,this.position.y-newSize,this.position.z-newSize) ,newColor,cubeSize));
 
-    appendSymbol(ccube(cvec3(this.position.x,this.position.y+newSize,this.position.z) ,this.color, cubeSize));
+    appendSymbol(ccube(cvec3(this.position.x+newSize,this.position.y-newSize,this.position.z-newSize) ,newColor, cubeSize));
+
+    appendSymbol(ccube(cvec3(this.position.x,this.position.y-newSize,this.position.z+newSize) ,newColor, cubeSize));
+
+    appendSymbol(ccube(cvec3(this.position.x,this.position.y+newSize,this.position.z) ,newColor, cubeSize));
 
 }
 
