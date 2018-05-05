@@ -7,6 +7,8 @@ parameter float bricketHeigth= 0.2;
 parameter float bricketGap= 0.001;
 parameter float bricketDisplacement= 0.1;
 
+parameter int iterations = 1;
+
 
 /*using polygon = struct
 {
@@ -341,7 +343,7 @@ int init()
     //
     
     BRANCHCOLOR = vec3(0.44,0.17,0.0);
-    int countOfGeneratedTrees = 400;
+    int countOfGeneratedTrees = iterations*50;
     while(countOfGeneratedTrees > 0)
     {
         vec3 position = vec3(uniform(-100.0,100.0), 0.0, uniform(-100.0,100.0));

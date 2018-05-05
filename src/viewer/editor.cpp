@@ -155,6 +155,7 @@ int main(int argc, char** argv) {
 		    [files,&scriptmachine,&shouldRotateModel] {
 
                 static int iterationCount = 0;
+                static float stochasticity = 0.5;
                 static bool open = true;
                 ImGui::Begin("Editor", &open, ImGuiWindowFlags_AlwaysAutoResize);
                 ImGui::Text("Choose the script you want to show. ");
@@ -163,17 +164,18 @@ int main(int argc, char** argv) {
                     if(file.find("gen") != std::string::npos)
                         if(ImGui::Selectable(file.c_str()))
                         {
-                          scriptmachine->addScript(file, iterationCount);
+                          scriptmachine->addScript(file, iterationCount,stochasticity);
                         }
                 }
                 
                 ImGui::Separator();
                 ImGui::Checkbox("Rotate model", &shouldRotateModel);
                 ImGui::SliderInt("Maximum iterations",&iterationCount,1, 8); 
+                ImGui::SliderFloat("Rate of stochasticity",&stochasticity,0.0, 1.0); 
                 
                 if(ImGui::Button("Generate"))
                 {
-                    scriptmachine->addScript(scriptmachine->getLastScriptName(), iterationCount);
+                    scriptmachine->addScript(scriptmachine->getLastScriptName(), iterationCount, stochasticity);
                 }
 
 

@@ -11,6 +11,7 @@ class ScriptControl
     std::vector<std::shared_ptr<Generator>>   outputResults;
 
     size_t iterationCount;
+    float stochasticity;
     bool shouldTerminate;
     bool _hasJob;
 
@@ -29,12 +30,13 @@ class ScriptControl
         jobMutex.unlock();
         this->slave.join();
     }
-    void addScript(std::string name, size_t iterationCount = 1)
+    void addScript(std::string name, size_t iterationCount = 1, float stochasticity = 0.5)
     {
         this->jobMutex.lock();
         this->inputScripts.push_back(name);
         this->lastScriptName = name;
         this->iterationCount = iterationCount;
+        this->stochasticity = stochasticity;
         this->jobMutex.unlock();
     }
     const std::string& getLastScriptName() const { return this->lastScriptName; }
@@ -70,6 +72,7 @@ class ScriptControl
                     {
                         // set iteration uniform
                         gen->getLibrary().setUniform("iterations", (int) this->iterationCount);
+                        gen->getLibrary().setUniform("stochasticity", (float) this->stochasticity);
                         bool generationResult = false;
                         if(gen->generate() != false)
                         {

@@ -1,0 +1,50 @@
+/*
+*  2D Texture for noob-engine procgen
+*  Roman Dobias
+*/
+
+// in range <0.0,1.0>
+using pixel = struct
+{
+    float r;
+    float g;
+    float b;
+};
+using texture = struct
+{
+    int width;
+    int heigth;
+    collection pixels;
+};
+
+
+// Get pixel at texture point position (x is <0, width>, y is <0, heigth>)
+pixel textureGetPixelAt(texture text, int x, int y)
+{
+    // calculate wrapping
+
+    int arrayPosition = (y*text.width+x);
+    if(arrayPosition < text.pixels.size())
+    {
+        return text.pixels.at(y*text.width+x);
+    }
+    return pixel(0.0,0.0,0.0);
+}
+
+// Get pixel at normalized position (x is <0, 1.0>, y is <0, 1.0>)
+pixel textureGetPixel(texture text, float u, float v)
+{
+    return textureGetPixelAt(text, (int) (u*(float) (text.width)), (int) (v*(float) (text.heigth)));
+}
+
+
+int init()
+{
+    texture tex;
+    tex.width = 2;
+    tex.heigth = 3;
+    tex.pixels = collection( pixel(1.0,0.0,0.0), pixel(1.0,1.0,0.0),
+                            pixel(0.0,0.0,0.0), pixel(1.0,0.0,0.0),
+                            pixel(0.0,1.0,0.0), pixel(0.0,1.0,0.0));
+
+}
