@@ -3,6 +3,9 @@
 #include <engine/mesh.h>
 #include <viewer/primitives.h>
 #include <procgen/procgen.h>
+
+
+#include "bitmap_image.hpp"
 class Generator
 {
 
@@ -276,5 +279,43 @@ class Generator
             transform->setTransformation(matrix);
             transform->addChild(model);
             return transform;
+        }
+
+        void addBitmapTexture(bitmap_image& img)
+        {
+            // Bitmap to JSON
+            json texture;
+
+           const unsigned int height = img.height();
+           const unsigned int width  = img.width();
+
+           texture["heigth"] = (int) height;
+           texture["width"] = (int) width;
+           texture["_type"] = "texture";
+
+           json pixels;
+           for (std::size_t y = 0; y < height; ++y)
+           {
+              for (std::size_t x = 0; x < width; ++x)
+              {
+                 rgb_t colour;
+
+                 img.get_pixel(x, y, colour);
+                 json pixel;
+                 pixel["r"] = (float) colour.red;
+                 pixel["g"] = (float) colour.green;
+                 pixel["b"] = (float) colour.blue;
+                 pixel["_type"] = "pixel";
+                 pixels.push_back(pixel);
+              }
+           }
+           texture["pixels"] = pixels;
+
+           // import JSON string
+           auto result = pg.appendSymbol(texture);
+           if(result == false)
+           {
+               LOG_ERROR("Failed to append BMP texture to Procgen\n");
+           }
         }
 };

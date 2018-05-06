@@ -23,7 +23,7 @@ find_package(SDL2 REQUIRED)
 find_package(GLEW REQUIRED)
 
 add_library(engine ${ENGINE_RESOURCES})
-target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} imgui) 
+target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} imgui bmploader) 
 target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
 
 ########
@@ -39,6 +39,10 @@ target_link_libraries(viewer engine procgen)
 
 add_executable(editor ./src/viewer/editor.cpp) 
 target_link_libraries(editor engine procgen ${CMAKE_THREAD_LIBS_INIT})
+
+
+add_executable(viewer-texture ./src/viewer/textureviewer.cpp) 
+target_link_libraries(viewer-texture engine procgen)
 
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

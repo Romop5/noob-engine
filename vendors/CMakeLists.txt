@@ -11,3 +11,7 @@ add_library(imgui ${IMGUI_SOURCES})
 target_include_directories(imgui PUBLIC imgui/.)
 
 add_subdirectory(procgen)
+
+
+add_library(bmploader INTERFACE)
+target_include_directories(bmploader INTERFACE bmploader)

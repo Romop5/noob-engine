@@ -26,7 +26,7 @@ pixel textureGetPixelAt(texture text, int x, int y)
     int arrayPosition = (y*text.width+x);
     if(arrayPosition < text.pixels.size())
     {
-        return text.pixels.at(y*text.width+x);
+        return convert<pixel>(text.pixels.at(y*text.width+x));
     }
     return pixel(0.0,0.0,0.0);
 }
@@ -38,6 +38,7 @@ pixel textureGetPixel(texture text, float u, float v)
 }
 
 
+/*
 int init()
 {
     texture tex;
@@ -48,3 +49,4 @@ int init()
                             pixel(0.0,1.0,0.0), pixel(0.0,1.0,0.0));
 
 }
+*/
