@@ -1,49 +1,121 @@
 #include "stdtexture.gen"
-#include "stdcubes.gen"
+#include "stdtube.procgen"
+
+
+// bounding texture
+parameter texture boundingTexture;
+
+parameter float GROWRATE =  0.6;
+parameter float ANGLE =  20.0;
+
+parameter vec3 BRANCHCOLOR;
+
+parameter int iterations = 4;
+parameter float stochasticity = 0.3;
+
+using treeBlock = struct
+{
+    vec3 position;
+    vec3 color;
+    vec3 sz;
+};
+
+using metablock = struct
+{
+    treeBlock bck;
+    vec3 direction;
+    int remaining;
+};
+
+int addBranch(vec3 start, metablock parent,float rotation)
+{
+    // get a new vector 
+    float stochasticAngle = ANGLE + uniform(-stochasticity, stochasticity)*ANGLE;
+    vec3 dirAngled = vec3VectorWithAngle(vec3Normalize(parent.direction), 3.1415*stochasticAngle/180.0);
+
+    // rotate new vector around its parent
+    mat3 rot = mat3RotateArbitrary(vec3Normalize(parent.direction), rotation);
+
+    // finally, get direction vector for new branch
+    vec3 branchDirection = mat3MulVec3(rot, dirAngled);
+
+
+    appendSymbol(metablock(treeBlock(start, BRANCHCOLOR, parent.bck.sz), branchDirection, parent.remaining -1));
+    //appendSymbol(block(vec3Add(start, branchDirection), vec3(0.0,1.0,0.0), vec3(0.1,0.1,0.1)));
+}
+using leaf = rule metablock
+{
+    if(this.remaining == 0)
+    {
+        return true;
+    }
+    return false;
+} {
+    vec3 unitVector = vec3Normalize(this.direction);
+    unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
+    vec3 newSize = vec3ScalarMul(this.bck.sz,GROWRATE);
+    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color,5.0);
+
+    makeLeaf(unitVector, this.direction, this.bck.sz.z*0.4);
+};
+using transformRule = rule metablock
+{
+    int x = (int) (this.bck.position.x);
+    int y = (int) (this.bck.position.z);
+    pixel pixelAtPoint  = convert<pixel>(boundingTexture.pixels.at(x+y*boundingTexture.width));
+    float length =  (pixelAtPoint.r + pixelAtPoint.g + pixelAtPoint.b);
+    if(length < this.bck.position.y+0.01)
+    {
+        return false;
+    }
+    if(this.remaining > 0)
+    {
+        return true;
+    }
+    return false;
+} {
+    vec3 unitVector = vec3Normalize(this.direction);
+    unitVector = vec3Add(this.bck.position, vec3ScalarMul(unitVector, this.bck.sz.z));
+
+    float stochasticGrow = GROWRATE+uniform(-stochasticity, stochasticity)*GROWRATE;
+    vec3 newSize = vec3ScalarMul(this.bck.sz,stochasticGrow);
+    makeTube(this.bck.position, unitVector, this.bck.sz.x,newSize.x, this.bck.color,5.0);
+    
+    vec3 newStart = unitVector;
+
+    this.bck.sz = newSize;
+
+    // add branches
+    addBranch(newStart,this,3.14*120.0/180.0);
+    addBranch(newStart,this,3.14*240.0/180.0);
+    addBranch(newStart,this,3.14*0.0/180.0);
+
+};
+
+
 
 using textureTransform = rule texture
 {
     return true;
 } {
-    print(this.width);
-    print(this.heigth);
+    // copy bounding texture to global parameter
+    boundingTexture = this;
+
+    BRANCHCOLOR = vec3(0.44,0.17,0.0);
     int x = 0;
     int y = 0;
     while(x < this.width)
     {
-        y = 0;
+        y= 0 ;
         while(y < this.heigth)
         {
-           pixel p = convert<pixel>(this.pixels.at(y*this.width+x));
-           float heigth  = vec3Length(vec3(p.r, p.g, p.b));
-           if(heigth < 0.1)
-           {
-                heigth = 0.1;
-           }
-            if(heigth > 0.5)
-            {
-                heigth = 0.5;
-            }
-       
-           appendSymbol(block(vec3((float) (x), -(float) (y), 0.0),vec3(1.0,0.0,0.0), vec3(0.5,heigth, 0.5))); 
-           print(vec3((float) (x), (float)(y), heigth));
-           y = y +1;
+            appendSymbol(metablock(treeBlock(vec3((float) (x),0.0,(float) (y)), BRANCHCOLOR, vec3(0.2,0.2,3.0)), vec3(0.0,1.0,0.0),iterations));
+            y = y + 3;
         }
-        x = x +1;
+        x = x + 3;
     }
-
- //   appendSymbol(block(vec3(0.0,10.0,0.0), vec3(0.0,1.0,0.0), vec3(10.0,10.0,10.0)));
-
-};
-
-using randomStruct = struct {
-    int a;
 };
 
 int init()
 {
-    print(100);
-    appendSymbol(randomStruct(10));
-//    appendSymbol(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(100.0,1.0,100.0)));
-    print(113);
 }

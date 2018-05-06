@@ -1,0 +1,49 @@
+#include "stdtexture.gen"
+#include "stdcubes.gen"
+
+using textureTransform = rule texture
+{
+    return true;
+} {
+    print(this.width);
+    print(this.heigth);
+    int x = 0;
+    int y = 0;
+    while(x < this.width)
+    {
+        y = 0;
+        while(y < this.heigth)
+        {
+           pixel p = convert<pixel>(this.pixels.at(y*this.width+x));
+           float heigth  = vec3Length(vec3(p.r, p.g, p.b));
+           if(heigth < 0.1)
+           {
+                heigth = 0.1;
+           }
+            if(heigth > 0.5)
+            {
+                heigth = 0.5;
+            }
+       
+           appendSymbol(block(vec3((float) (x), -(float) (y), 0.0),vec3(1.0,0.0,0.0), vec3(0.5,heigth, 0.5))); 
+           print(vec3((float) (x), (float)(y), heigth));
+           y = y +1;
+        }
+        x = x +1;
+    }
+
+ //   appendSymbol(block(vec3(0.0,10.0,0.0), vec3(0.0,1.0,0.0), vec3(10.0,10.0,10.0)));
+
+};
+
+using randomStruct = struct {
+    int a;
+};
+
+int init()
+{
+    print(100);
+    appendSymbol(randomStruct(10));
+//    appendSymbol(block(vec3(0.0,0.0,0.0), vec3(1.0,0.0,0.0), vec3(100.0,1.0,100.0)));
+    print(113);
+}
