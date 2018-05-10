@@ -9,6 +9,9 @@
 #ifndef DIRENT_H
 #define DIRENT_H
 
+// This .h file is only needed for non-POSIX OS like Windows
+// it's already available for Linux
+
 /*
  * Include windows.h without Windows Sockets 1.1 to prevent conflicts with
  * Windows Sockets 2.0.
@@ -1156,4 +1159,3 @@ dirent_set_errno(
 }
 #endif
 #endif /*DIRENT_H*/
-

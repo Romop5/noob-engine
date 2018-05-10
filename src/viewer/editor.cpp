@@ -13,7 +13,11 @@
 
 
 #include <sys/types.h>
+#ifdef _WIN32
+#include <windirent.h>
+#else
 #include <dirent.h>
+#endif
 //#include <libgen.h>
 #include <algorithm>
 
