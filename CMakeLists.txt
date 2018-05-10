@@ -23,8 +23,8 @@ find_package(SDL2 REQUIRED)
 find_package(GLEW REQUIRED)
 
 add_library(engine ${ENGINE_RESOURCES})
-target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} imgui bmploader) 
-target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} imgui bmploader dirent) 
+target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
 
 ########
 # Viewer 

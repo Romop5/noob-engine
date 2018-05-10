@@ -14,7 +14,7 @@
 
 #include <sys/types.h>
 #include <dirent.h>
-#include <libgen.h>
+//#include <libgen.h>
 #include <algorithm>
 
 
@@ -216,4 +216,5 @@ int main(int argc, char** argv) {
         std::chrono::duration<double, std::milli> elapsed = passEnd-passStart;
         std::this_thread::sleep_for(milisecondsPerPass-elapsed);
     }
+	return 1;
 }

@@ -1,6 +1,10 @@
 #ifndef _CAMERACONTROLLER_H
 #define _CAMERACONTROLLER_H
+#ifdef _WIN32
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 #include <engine/scenecamera.h>
 
 class CameraController

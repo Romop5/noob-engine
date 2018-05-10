@@ -15,3 +15,6 @@ add_subdirectory(procgen)
 
 add_library(bmploader INTERFACE)
 target_include_directories(bmploader INTERFACE bmploader)
+
+add_library(dirent INTERFACE)
+target_include_directories(dirent INTERFACE dirent/.)

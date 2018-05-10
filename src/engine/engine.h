@@ -9,7 +9,11 @@
 #include <engine/scenelight.h>
 #include <gui/gui.h>
 
+#ifdef _WIN32
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
 
 // OpenGL / glew Headers
 #define GL3_PROTOTYPES 1
