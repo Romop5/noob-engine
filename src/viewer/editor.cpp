@@ -54,6 +54,7 @@ std::vector<std::string> getFilesInDirectory(std::string path)
     return files;
 }
 
+
 int main(int argc, char** argv) {
 
    size_t width = 1200;

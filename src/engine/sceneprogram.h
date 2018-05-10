@@ -55,16 +55,19 @@ class ShaderProgram {
 
         GLint Result = GL_FALSE;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &Result);
-        int InfoLogLength;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &InfoLogLength);
-        if (InfoLogLength > 0) {
-            std::vector<char> errorMessage(InfoLogLength + 1);
-            glGetShaderInfoLog(shader, InfoLogLength, NULL, &errorMessage[0]);
-            LOG_ERROR("%s\n", &errorMessage[0]);
-            LOG_ERROR("In shader: %s\n", file.c_str());
+		if(Result == GL_FALSE)
+		{
+			int InfoLogLength;
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			if (InfoLogLength > 0) {
+				std::vector<char> errorMessage(InfoLogLength + 1);
+				glGetShaderInfoLog(shader, InfoLogLength, NULL, &errorMessage[0]);
+				LOG_ERROR("Shader error: >%s<\n", &errorMessage[0]);
+				LOG_ERROR("In shader: %s\n", file.c_str());
 
-            return 0;
-        }
+				return 0;
+			}
+		}
 
         return shader;
     }
@@ -97,15 +100,18 @@ class ShaderProgram {
         GLint Result = GL_FALSE;
         glGetProgramiv(shaderProgram, GL_COMPILE_STATUS, &Result);
 
-        int InfoLogLength = 0;
-        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
-        if (InfoLogLength > 0) {
-            std::vector<char> errorMessage(InfoLogLength + 1);
-            glGetProgramInfoLog(shaderProgram, InfoLogLength, NULL, &errorMessage[0]);
-            LOG_ERROR("Linking: %s\n", &errorMessage[0]);
+		if(Result)
+		{
+			int InfoLogLength = 0;
+			glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			if (InfoLogLength > 0) {
+				std::vector<char> errorMessage(InfoLogLength + 1);
+				glGetProgramInfoLog(shaderProgram, InfoLogLength, NULL, &errorMessage[0]);
+				LOG_ERROR("Linking: >%s<\n", &errorMessage[0]);
 
-            return false;
-        }
+				return false;
+			}
+		}
 
 
      
