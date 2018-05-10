@@ -10,12 +10,13 @@ class SceneTransform : public SceneNode {
     glm::mat4 _finalTransformation;
 
   public:
-    SceneTransform() { _typeOfNode = SceneNodeType::TRANSFORMATION; }
+    SceneTransform(): _finalTransformation(1.0)	{ _typeOfNode = SceneNodeType::TRANSFORMATION; }
     glm::mat4 getTransformation() { return _finalTransformation; }
 
     virtual json this_json() const override { return json("Transform"); }
 
     void setTransformation(glm::mat4 newTrans) {
+		//LOG_INFO("New transform: %s\n", glm::to_string(newTrans).c_str());
         this->_finalTransformation = newTrans;
     }
 

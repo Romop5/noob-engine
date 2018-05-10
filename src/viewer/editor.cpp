@@ -70,6 +70,7 @@ int main(int argc, char** argv) {
 
     nodeB->setTransformation(glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,10.0)));
 
+	LOG_INFO("nodeB: %s\n", glm::to_string(nodeB->getTransformation()).c_str());
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
   
     glm::mat4 viewMatrix = glm::lookAt(

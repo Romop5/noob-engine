@@ -50,8 +50,8 @@ class CameraController
     }
     
     public:
-    CameraController(): _isDirty(true) {}
-    CameraController(std::shared_ptr<SceneCamera> cam): _isDirty(true),
+    CameraController(): _isDirty(true), _position(0.0,0.0,0.0), _rotationMatrix(1.0), _angles(0.0,0.0)	{}
+    CameraController(std::shared_ptr<SceneCamera> cam): _isDirty(true), _position(0.0,0.0,0.0), _rotationMatrix(1.0), _angles(0.0,0.0),
             _cameraNode(cam) {}
 
     void setCameraNode(std::shared_ptr<SceneCamera> cam)

@@ -34,6 +34,7 @@ bool Engine::createWindows(float width, float heigth) {
     glewExperimental = GL_TRUE;
     glewInit();
 #endif
+	return true;
 }
 void Engine::resizeWindows(float width, float heigth) 
 {

@@ -73,8 +73,8 @@ class ScriptControl
                         // set iteration uniform
                         gen->getLibrary().setUniform("iterations", (int) this->iterationCount);
                         gen->getLibrary().setUniform("stochasticity", (float) this->stochasticity);
-                        bool generationResult = false;
-                        if(gen->generate() != false)
+                        bool generationResult = gen->generate();
+						if(generationResult != false)
                         {
                             if(scriptName.find("cube") != std::string::npos)
                             {
