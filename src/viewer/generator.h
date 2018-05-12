@@ -18,6 +18,7 @@ class Generator
         ProcGen::Procgen& getLibrary() { return this->pg;}
         bool compile(std::string filePath)
         {
+			LOG_INFO("Compiling %s\n", filePath);
             shouldMergeTriangles = true;
             //pg.setDebugOn(false);
 
@@ -36,12 +37,15 @@ class Generator
              if(this->pg.runInit() == false)
                     return false;
 
+			LOG_INFO("Starting generation process.\n");
             this->pg.run(0);
+			LOG_INFO("Generation done.\n");
             return true;
         }
 
         bool produceOutput(std::shared_ptr<SceneNode> parent)
         {
+			LOG_INFO("Producing visuals from JSON output.\n");
             produceGeometryFromJson(parent, this->pg);
 
             if(shouldMergeTriangles)
@@ -66,10 +70,6 @@ class Generator
  
         void produceGeometryFromJson(std::shared_ptr<SceneNode> parent, ProcGen::Procgen& procgen)
         {
-
-               // LOG_DEBUG("Result of generation: \n%s\n",input.dump(1).c_str());
-
-              //  LOG_DEBUG("Count of objects: %d\n", input.size());
               size_t countOfObjects = procgen.countOfSymbols();
               for(size_t i = 0; i < countOfObjects; i++)
                 {
@@ -93,8 +93,6 @@ class Generator
 
         void processPolygon(std::shared_ptr<SceneNode> parent, json polygon)
         {
-            
-            LOG_INFO("Polygon: %s\n", polygon.dump().c_str());
             // each polygon has a collection with name 'points'
             if(polygon.find("points") == polygon.end())
             {
@@ -111,13 +109,10 @@ class Generator
             glm::vec3 color = glm::vec3(polygon["color"]["x"].get<float>(),polygon["color"]["y"].get<float>(),polygon["color"]["z"].get<float>());
 
             parent->addChild(this->createPolygon(points,color));
-            LOG_INFO("Adding polygon\n");
         }
 
         void processJsonCube(std::shared_ptr<SceneNode> parent, json cube)
         {
-            
-            //LOG_DEBUG("Cube: %s\n", cube.dump(1).c_str());
             json jsonPosition = cube["position"];
             glm::vec3 position;
             position[0] = jsonPosition["x"].get<double>();
@@ -270,7 +265,7 @@ class Generator
             //glm::mat4 matrix = glm::scale(sz)*glm::translate(position);
             //
             
-            LOG_INFO("Rotation : %s\n", glm::to_string(rotation).c_str());
+            //LOG_INFO("Rotation : %s\n", glm::to_string(rotation).c_str());
 
             //rotation = glm::rotate(glm::mat4(1.0f), 30.0f, glm::vec3(1.0f,1.0f,1.0f));
 
