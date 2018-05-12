@@ -24,7 +24,7 @@ bool Engine::createWindows(float width, float heigth) {
     this->_window =
         SDL_CreateWindow("NoobEngine Pro-Alfa-Noob version 666", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                          width, heigth, SDL_WINDOW_OPENGL);
-	if (this->_window == false)
+	if (this->_window == nullptr)
 	{
 		LOG_ERROR("Failed to create windows \n");
 	}

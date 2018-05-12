@@ -18,7 +18,7 @@ class Generator
         ProcGen::Procgen& getLibrary() { return this->pg;}
         bool compile(std::string filePath)
         {
-			LOG_INFO("Compiling %s\n", filePath);
+			LOG_INFO("Compiling %s\n", filePath.c_str());
             shouldMergeTriangles = true;
             //pg.setDebugOn(false);
 
