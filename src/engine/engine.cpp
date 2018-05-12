@@ -8,9 +8,11 @@ bool Engine::createWindows(float width, float heigth) {
 
 
 
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER) != 0)
-        return false;
-
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
+	{
+		LOG_ERROR("Failed to initialize SDL.\n");
+		return false;
+	}
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -22,7 +24,10 @@ bool Engine::createWindows(float width, float heigth) {
     this->_window =
         SDL_CreateWindow("NoobEngine Pro-Alfa-Noob version 666", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                          width, heigth, SDL_WINDOW_OPENGL);
-
+	if (this->_window == false)
+	{
+		LOG_ERROR("Failed to create windows \n");
+	}
     SDL_SetWindowResizable(this->_window, SDL_TRUE);
     _mainContext = SDL_GL_CreateContext(this->_window);
 
@@ -73,8 +78,8 @@ void Engine::render() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
     RenderState rs;
-    rs.mvp = glm::mat4(1.0);
-    rs.program = 0;
+    //rs.mvp = glm::mat4(1.0);
+    //rs.program = 0;
     // Render scene
     this->getScene()->render(rs);
 

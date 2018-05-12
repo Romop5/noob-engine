@@ -16,7 +16,7 @@ class SceneCamera : public SceneTransform
     float _fov;
 
     public:
-    SceneCamera(): _isDirty(true), _width(800.0), _height(600) {}
+    SceneCamera(): _isDirty(true), _width(800.0), _height(600), _fov(45.0),_perspective(1.0), _view(1.0) {}
     virtual json this_json() const { return json("Camera"); }
 
     virtual void render(RenderState& state)

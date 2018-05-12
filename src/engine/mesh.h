@@ -108,7 +108,7 @@ class Mesh {
         ENABLE_VERTEX_ATTRIBUTE(NORMAL, 3, 3);
     }
   public:
-    Mesh() { glGenVertexArrays(1, &vao); }
+    Mesh(): verticesCount(0), vao(0), vbo(0)	{ glGenVertexArrays(1, &vao); }
     ~Mesh() { glDeleteVertexArrays(1, &vao); }
     void createFromVertices(std::vector<Triangle> polygons,size_t flags) {
         size_t vertexSize = this->getSizeOfVertex(flags);

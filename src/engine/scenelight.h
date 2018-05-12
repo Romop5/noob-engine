@@ -7,7 +7,7 @@ class SceneLight: public SceneNode
     glm::vec3 _position;
     glm::vec3 _colour;
     public:
-    SceneLight () { _typeOfNode = SceneNodeType::LIGHT; }
+    SceneLight (): _position(0.0,0.0,0.0),_colour(1.0,0.0,0.0)	{ _typeOfNode = SceneNodeType::LIGHT; }
     virtual json this_json() const { return json("Light"); }
 
     virtual void render(RenderState& state) override
