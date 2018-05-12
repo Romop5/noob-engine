@@ -1,6 +1,7 @@
 #ifndef _TREENODE_H
 #define _TREENODE_H
 #include <vector>
+#include <cstdlib>
 template <class T> class TreeNode {
   private:
     std::vector<T> children;
