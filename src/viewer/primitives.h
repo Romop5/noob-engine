@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/primitives.h
+ * @brief Utility class to create primitives over mesh (cube etc) 
+ * @copyright The MIT license 
+ */
+
 #ifndef _PRIMITIVE_H
 #define _PRIMITIVE_H
 #include <engine/mesh.h>

@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/sceneprogram.h
+ * @brief Node for shader loading
+ * @copyright The MIT license 
+ */
+
 #ifndef _SCENEPROGRAM_H
 #define _SCENEPROGRAM_H
 #include <GL/glew.h>
@@ -91,6 +97,7 @@ class ShaderProgram {
         for (auto &shader : compiledShaders)
             glAttachShader(shaderProgram, shader);
 
+        // Set attributes
         glBindAttribLocation(shaderProgram, 0, "modelPos");
         glBindAttribLocation(shaderProgram, 2, "modelColor");
         glBindAttribLocation(shaderProgram, 3, "modelNormal");

@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/scenevisual.h
+ * @brief Mesh node
+ * @copyright The MIT license 
+ */
+
 #ifndef _SCENEVISUAL_H
 #define _SCENEVISUAL_H
 
@@ -20,19 +26,12 @@ class SceneVisual : public SceneNode {
     {
         for(auto &mesh: this->meshes)
         {
-            //LOG_INFO("Drawing a mesh with transform:\n");
-            //LOG_INFO("%s\n", glm::to_string(state.mvp).c_str());
+            // Render mesh
             GLint loc = glGetUniformLocation(state.program, "world");
             glUniformMatrix4fv(loc,1,GL_FALSE, glm::value_ptr(state.mvp));
-          //  glBindBuffer(GL_ARRAY_BUFFER, mesh.getVertexBufferObjectId());
-                       // Draw the triangle !
-
             glBindVertexArray(mesh->getVertexArrayObjectId());
-
             glDrawArrays(GL_TRIANGLES,0, mesh->getVerticesCount());
-
             glBindVertexArray(0);
-            //glDisableVertexAttribArray(0);  
         }
 
         // Pre

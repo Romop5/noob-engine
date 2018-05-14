@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/engine.cpp
+ * @brief Engine definition
+ * @copyright The MIT license 
+ */
+
 #include "engine.h"
 #include <glm/ext.hpp>
 #include <glm/glm.hpp>
@@ -6,13 +12,16 @@
 
 bool Engine::createWindows(float width, float heigth) {
 
-
-
+    // Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
 	{
 		LOG_ERROR("Failed to initialize SDL.\n");
 		return false;
 	}
+    
+    /*
+     * Set flags for OpenGL context
+     */
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -28,7 +37,9 @@ bool Engine::createWindows(float width, float heigth) {
 	{
 		LOG_ERROR("Failed to create windows \n");
 	}
+    // Note: Optional - this can be removed if causes compilation 
     SDL_SetWindowResizable(this->_window, SDL_TRUE);
+
     _mainContext = SDL_GL_CreateContext(this->_window);
 
     // init GUI
@@ -74,16 +85,15 @@ void Engine::render() {
     if(this->_window == nullptr || this->getScene() == nullptr)
         return;
 
+    // Clear screen
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-    RenderState rs;
-    //rs.mvp = glm::mat4(1.0);
-    //rs.program = 0;
     // Render scene
+    RenderState rs;
     this->getScene()->render(rs);
 
-    // render GUI
+    // Render GUI
     _gui.render();
 
     SDL_GL_SwapWindow(this->_window);

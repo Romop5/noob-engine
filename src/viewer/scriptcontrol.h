@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/scriptcontrol.h
+ * @brief Multithreaded script loading
+ * @copyright The MIT license 
+ */
+
 #include <engine/engine.h>
 #include <thread>
 #include <mutex>
@@ -30,6 +36,13 @@ class ScriptControl
         jobMutex.unlock();
         this->slave.join();
     }
+    /**
+     * @brief Add script which will be generated with parameters
+     *
+     * @param name
+     * @param iterationCount
+     * @param stochasticity
+     */
     void addScript(std::string name, size_t iterationCount = 1, float stochasticity = 0.5)
     {
         this->jobMutex.lock();
@@ -39,6 +52,11 @@ class ScriptControl
         this->stochasticity = stochasticity;
         this->jobMutex.unlock();
     }
+    /**
+     * @brief Get last script that was generated
+     *
+     * @return 
+     */
     const std::string& getLastScriptName() const { return this->lastScriptName; }
     void init()
     {

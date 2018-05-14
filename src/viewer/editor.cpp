@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/editor.cpp
+ * @brief Simple script viewer with options
+ * @copyright The MIT license 
+ */
+
 #include <engine/engine.h>
 #include <glm/ext.hpp>
 #include <iostream>

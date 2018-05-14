@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/treetemplate.h
+ * @brief Utility template for tree noding
+ * @copyright The MIT license 
+ */
+
 #ifndef _TREENODE_H
 #define _TREENODE_H
 #include <vector>
@@ -7,6 +13,11 @@ template <class T> class TreeNode {
     std::vector<T> children;
 
   public:
+    /**
+     * @brief Returns all subnodes
+     *
+     * @return 
+     */
     std::vector<T> getChildren() const { return this->children; }
 
     void addChild(const T child) { this->children.push_back(child); }

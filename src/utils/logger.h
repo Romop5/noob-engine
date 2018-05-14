@@ -1,3 +1,9 @@
+/**
+ * @file ./utils/logger.h
+ * @brief Utility class for logging
+ * @copyright The MIT license 
+ */
+
 #ifndef _LOGGER_H
 #define _LOGGER_H
 #include <cstdarg>

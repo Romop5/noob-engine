@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/generator.h
+ * @brief Wrapper for ProcGen which keeps results and carry out visuals
+ * @copyright The MIT license 
+ */
+
 #include <engine/engine.h>
 #include <engine/scenevisual.h>
 #include <engine/mesh.h>

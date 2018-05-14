@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/mesh.h
+ * @brief Utility for mesh creation, normal calculation etc
+ * @copyright The MIT license 
+ */
+
 #ifndef _MESH_H
 #define _MESH_H
 
@@ -24,6 +30,9 @@ enum VertexAtributes { POSITION = 1, UV=2, COLOR=4, NORMAL=8};
         }
 
 
+/**
+ * @brief Vertex of polygon
+ */
 struct Vertex
 {
     glm::vec3 _position;
@@ -32,7 +41,15 @@ struct Vertex
     glm::vec3 _normal;
     Vertex(glm::vec3 pos): _position(pos) {} 
     Vertex(glm::vec3 pos,glm::vec3 color): _position(pos), _color(color) {} 
-    //Returns bytes copied
+
+    /**
+     * @brief Serialize vertex to OpenGL buffer 
+     *
+     * @param raw
+     * @param flags
+     *
+     * @return 
+     */
     size_t copyToRawArray(float* raw, size_t flags)
     {
         size_t offset = 0;
@@ -43,6 +60,14 @@ struct Vertex
         return offset;
     }
 
+    /**
+     * @brief Deserialize vertex from OpenGL buffer to structure
+     *
+     * @param raw
+     * @param flags
+     *
+     * @return 
+     */
     size_t readFromRawArray(float* raw,size_t flags)
     {
         size_t offset = 0;
@@ -110,18 +135,29 @@ class Mesh {
   public:
     Mesh(): verticesCount(0), vao(0), vbo(0)	{ glGenVertexArrays(1, &vao); }
     ~Mesh() { glDeleteVertexArrays(1, &vao); }
+
+    /**
+     * @brief Create OpenGL VAO from vector of polygons
+     *
+     * @param polygons
+     * @param flags
+     */
     void createFromVertices(std::vector<Triangle> polygons,size_t flags) {
         size_t vertexSize = this->getSizeOfVertex(flags);
         size_t size =  vertexSize *3* polygons.size();
 
         auto rawArray = new float[size];
         size_t offset = 0;
+        // for each polygon
         for (size_t i = 0; i < polygons.size(); i++) {
+            // for each vertex
             for(size_t v= 0; v< 3; v++)
             {
                 auto polygon = polygons[i];
+                // Calculate normal for given vertex
                 if(flags & VertexAtributes::NORMAL)
                     polygon.calculateNormals();
+                // for each vertex, serialize to OpenGL buffer
                 offset += polygon.vertices[v].copyToRawArray(&rawArray[offset],flags);
             }
         }
@@ -131,6 +167,8 @@ class Mesh {
         {
             LOG_DEBUG("%d: %f\n",i,rawArray[i]);
         }
+
+        // Create VAO object
         glGenVertexArrays(1,&vao);
         glBindVertexArray(vao);
 
@@ -138,6 +176,7 @@ class Mesh {
         glGenBuffers(1, &vbo);
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
+        // copy buffer data to OpenGL memory
         glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), rawArray, GL_STATIC_DRAW);
         delete[] rawArray;
 
@@ -146,6 +185,12 @@ class Mesh {
         this->verticesCount = polygons.size()*3;
     }
 
+    /**
+     * @brief Reconstruct polygons from OpenGL memory
+     *
+     * @param polygons
+     * @param flags
+     */
     void createVerticesFromRaw(std::vector<Triangle>& polygons,size_t flags) {
         size_t vertexSize = this->getSizeOfVertex(flags);
         size_t size =  vertexSize *3* polygons.size();

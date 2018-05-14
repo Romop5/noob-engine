@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/engine.h
+ * @brief Engine main class
+ * @copyright The MIT license 
+ */
+
 #ifndef _ENGINE_H
 #define _ENGINE_H
 

@@ -8,7 +8,7 @@ parameter float bricketGap= 0.001;
 parameter float bricketDisplacement= 0.1;
 parameter float stochasticity = 0.5;
 
-parameter int iterations = 1;
+parameter int iterations = 8;
 
 
 /*using polygon = struct
@@ -330,6 +330,7 @@ int init()
     //appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 100, simpleCurve));
     //
     
+    
     appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 70, simpleCurve));
     appendSymbol(tower(vec3(20.0,0.0,0.0),1.0, 70, simpleCurve));
     appendSymbol(tower(vec3(20.0,0.0,20.0),1.0, 70, simpleCurve));
@@ -344,6 +345,8 @@ int init()
 
     // spawn randomly trees
     //
+    
+    
     
     BRANCHCOLOR = vec3(0.44,0.17,0.0);
     int countOfGeneratedTrees = iterations*50;

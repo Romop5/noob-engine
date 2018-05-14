@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/main.cpp
+ * @brief Entry point 
+ * @copyright The MIT license 
+ */
+
 #include <engine/engine.h>
 #include <glm/ext.hpp>
 #include <iostream>
@@ -35,8 +41,9 @@ int main(int argc, char** argv) {
 
     nodeB->setTransformation(glm::translate(glm::mat4(1.0), glm::vec3(0.0,0.0,10.0)));
 
-    //glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float) width / (float)height, 0.1f, 1000.0f);
-  
+    /*
+     * Set camera transform
+     */
     glm::mat4 viewMatrix = glm::lookAt(
         glm::vec3(0, 0.0, -5.0), glm::vec3(0.0), glm::vec3(0.0, 1.0, 0.0));
 
@@ -53,45 +60,29 @@ int main(int argc, char** argv) {
 
     LOG_INFO("Supported GLSL version is %s.\n", (char *)glGetString(GL_SHADING_LANGUAGE_VERSION));
     
- //   return 1;
-
-    auto model = std::make_shared<SceneVisual>();
-    auto mesh = std::make_shared<Primitive>();
-    mesh->createBox();
-    model->appendMesh(mesh);
-
-
-    auto submesh = std::make_shared<Primitive>();
-    submesh->createBox();
-    auto submodel = std::make_shared<SceneVisual>();
-    submodel->appendMesh(mesh);
-
-    auto submeshTransfor = std::make_shared<SceneTransform>();
-    submeshTransfor->setTransformation(
-            glm::translate(glm::scale(glm::mat4(1.0),glm::vec3(2.0,2.0,2.0)), glm::vec3(0,3.0,0)));
-
-    submeshTransfor->addChild(submodel);
-    model->addChild(submeshTransfor);
-
+    /*
+     * Group of objects
+     */
     auto objects = std::make_shared<SceneNode>();
 
+    /*
+     * Create basic shader
+     */
     auto shaderProgram = std::make_shared<ShaderProgram>();
     shaderProgram->LoadShaders("basic.vertex","basic.fragment");
     auto shaderNode = std::make_shared<SceneShader>(shaderProgram);
 
-  //  shaderNode->addChild(model);
+    /*
+     * Create light
+     */
     auto lightNode = std::make_shared<SceneLight>();
     lightNode->addChild(objects);
     shaderNode->addChild(lightNode);
     nodeB->addChild(shaderNode);
 
-
-
-
     size_t i = 0;
 
     // Show wireframed
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
@@ -130,8 +121,6 @@ int main(int argc, char** argv) {
 
     }
 
-    //if(engine.getScene() != nullptr)
-      //  LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
     /*  RENDERING LOOP */
     while (engine.isRunning()) {
@@ -140,11 +129,6 @@ int main(int argc, char** argv) {
         engine.handleEvents();
         // Render
         engine.render();
-
-        // Do rotation
-//        i++;
-  //      glm::mat4 rot = glm::rotate(float(i)*0.01f, glm::vec3(0.0,1.0,0.0));
-    //    nodeB->setTransformation(rot);
 
         // calculate remaining time
         auto passEnd = std::chrono::high_resolution_clock::now();

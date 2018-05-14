@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/scenetransform.h
+ * @brief Node transform
+ * @copyright The MIT license 
+ */
+
 #ifndef _SCENETRANSFOR_H
 #define _SCENETRANSFOR_H
 #include <engine/scenenode.h>
@@ -16,7 +22,6 @@ class SceneTransform : public SceneNode {
     virtual json this_json() const override { return json("Transform"); }
 
     void setTransformation(glm::mat4 newTrans) {
-		//LOG_INFO("New transform: %s\n", glm::to_string(newTrans).c_str());
         this->_finalTransformation = newTrans;
     }
 

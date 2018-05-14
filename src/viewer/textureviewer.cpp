@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/textureviewer.cpp
+ * @brief Viewer with BMP texture loading
+ * @copyright The MIT license 
+ */
+
 #include <engine/engine.h>
 #include <glm/ext.hpp>
 #include <iostream>
@@ -122,12 +128,14 @@ int main(int argc, char** argv) {
         std::string name = argv[1];
         if(gen.compile(name.c_str()))
         {
+            // Load texture 
              bitmap_image image("texture.bmp");
              if (!image)
              {
                 LOG_ERROR("Error - Failed to open: texture.bmp\n");
                 return 1;
              }
+             // Append texture to ProcGen string
             gen.addBitmapTexture(image);
 
             bool generationResult = false;
@@ -140,8 +148,6 @@ int main(int argc, char** argv) {
 
     }
 
-    //if(engine.getScene() != nullptr)
-      //  LOG_INFO("Json of tree: %s\n", engine.getScene()->to_json().dump(1).c_str());
 
     /*  RENDERING LOOP */
     while (engine.isRunning()) {

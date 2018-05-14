@@ -238,7 +238,7 @@ int init()
 {
     collection simpleCurve = collection(point(0.0,1.5),point(2.0,1.0),point(5.0,1.0),point(5.2,1.1),point(5.4,1.0), point(8.0,1.0),point(9.0,1.5));
     //collection simpleCurve = collection(point(0.0,1.5),point(2.0,3.0),point(5.0,1.0),point(5.2,1.1),point(5.4,3.0), point(8.0,4.0),point(9.0,1.5));
-    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 150, simpleCurve));
-    appendSymbol(tower(vec3(4.0,0.0,0.0),1.0, 100, simpleCurve));
-    appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 100, simpleCurve));
+    appendSymbol(tower(vec3(0.0,0.0,0.0),1.0, 75, simpleCurve));
+    appendSymbol(tower(vec3(4.0,0.0,0.0),1.0, 50, simpleCurve));
+    appendSymbol(tower(vec3(-4.0,0.0,0.0),1.0, 50, simpleCurve));
 }

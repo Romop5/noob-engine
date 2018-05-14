@@ -1,3 +1,9 @@
+/**
+ * @file ./gui/gui.cpp
+ * @brief GUI definition
+ * @copyright The MIT license 
+ */
+
 #include <gui/gui.h>
 #include <utils/logger.h>
 
@@ -13,6 +19,9 @@ GUI::~GUI()
 
 void GUI::init(SDL_Window* windows)
 {
+    /*
+     *  Initialize Dear Imgui and bind it to SDL window
+     */
 	LOG_INFO("Init GUI windows %p\n", windows);
 	this->_windows = windows;
     // Setup ImGui binding
@@ -28,7 +37,7 @@ void GUI::init(SDL_Window* windows)
 
 void GUI::render()
 {
-        ImGui_ImplSdlGL3_NewFrame(this->_windows);
+    ImGui_ImplSdlGL3_NewFrame(this->_windows);
 	/* Call all callbacks */
 	for(auto &pair: this->_callback)
 	{

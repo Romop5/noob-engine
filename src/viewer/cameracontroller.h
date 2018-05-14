@@ -1,3 +1,9 @@
+/**
+ * @file ./viewer/cameracontroller.h
+ * @brief Simple camera controller (AWSD, arrows)
+ * @copyright The MIT license 
+ */
+
 #ifndef _CAMERACONTROLLER_H
 #define _CAMERACONTROLLER_H
 #ifdef _WIN32
@@ -59,13 +65,17 @@ class CameraController
         this->_cameraNode = cam;
     }
     
+    /**
+     * @brief Update camera object according to keyboard events
+     *
+     * @param event
+     */
     void processMessage(SDL_Event event)
     {  
         switch(event.type)
         {
             case SDL_KEYDOWN:
             {
-                LOG_INFO("Here we are - and event\n");
                 if(event.key.keysym.sym == SDLK_a)
                     this->moveCameraBy(glm::vec3(1.0,0.0,0.0)); 
 

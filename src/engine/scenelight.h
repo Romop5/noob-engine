@@ -1,3 +1,9 @@
+/**
+ * @file ./engine/scenelight.h
+ * @brief Light node
+ * @copyright The MIT license 
+ */
+
 #ifndef _LIGHT_H
 #include <engine/scenenode.h>
 
@@ -10,6 +16,11 @@ class SceneLight: public SceneNode
     SceneLight (): _position(0.0,0.0,0.0),_colour(1.0,0.0,0.0)	{ _typeOfNode = SceneNodeType::LIGHT; }
     virtual json this_json() const { return json("Light"); }
 
+    /**
+     * @brief Prepare light rendering - change uniforms
+     *
+     * @param state
+     */
     virtual void render(RenderState& state) override
     {
         auto countOfLightsLocation = glGetUniformLocation(
