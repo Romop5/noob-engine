@@ -5,6 +5,9 @@ set (CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
+include(${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
 ########
 # Engine
 ########
@@ -17,14 +20,10 @@ set(ENGINE_RESOURCES
 add_subdirectory(vendors)
 
 find_package(Threads REQUIRED)
-find_package(GLM REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
-find_package(GLEW REQUIRED)
 
 add_library(engine ${ENGINE_RESOURCES})
-target_link_libraries(engine json ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} imgui bmploader dirent) 
-target_include_directories(engine PUBLIC src ${GLM_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS} ${GLEW_INCLUDE_DIRS})
+target_link_libraries(engine json  CONAN_PKG::sdl CONAN_PKG::opengl CONAN_PKG::glew CONAN_PKG::libffi imgui bmploader dirent) 
+target_include_directories(engine PUBLIC src)
 
 ########
 # Viewer 
